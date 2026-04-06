@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -87,15 +88,35 @@ class User extends Authenticatable
     public function hasAnyRole(array $roles): bool
     {
         return in_array($this->role, $roles);
-        
+    }
+
+    /**
+     * Check if the user has a specific role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
     }
     
-      /**
+    /**
+     * Get the student profile for the user.
+     */
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+    
+    /**
      * Get the daily reports for the user.
      */
     public function reports(): HasMany
     {
         return $this->hasMany(DailyReport::class);
+    }
+
+    public function schools(): BelongsToMany
+    {
+        return $this->belongsToMany(School::class);
     }
 
 }

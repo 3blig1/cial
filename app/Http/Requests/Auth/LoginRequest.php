@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\School;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'school_id' => ['required', 'integer', 'exists:schools,id'],
         ];
     }
 
@@ -48,6 +50,30 @@ class LoginRequest extends FormRequest
                 'email' => trans('auth.failed'),
             ]);
         }
+
+        $user = Auth::user();
+        $schoolId = (int) $this->input('school_id');
+        $isActiveSchool = School::whereKey($schoolId)->where('is_active', true)->exists();
+
+        if (! $user || ! $isActiveSchool) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'school_id' => 'École invalide ou inactive.',
+            ]);
+        }
+
+        if (! $user->isAdmin() && ! $user->schools()->where('schools.id', $schoolId)->exists()) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'school_id' => 'Accès refusé pour cette école.',
+            ]);
+        }
+
+        $this->session()->put('school_id', $schoolId);
 
         RateLimiter::clear($this->throttleKey());
     }

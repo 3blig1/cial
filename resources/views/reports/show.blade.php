@@ -20,7 +20,7 @@
     <div class="p-6 border-b">
         <h1 class="text-2xl font-bold text-gray-900">{{ $report->title }}</h1>
         <p class="mt-1 text-sm text-gray-500">
-            Rapport du {{ $report->report_date->format('d F Y') }} par {{ $report->author->name }}
+            Rapport du {{ $report->report_date->format('d F Y') }} à {{ $report->created_at->format('H:i:s') }} par {{ $report->author->name }}
         </p>
     </div>
     <div class="p-6">

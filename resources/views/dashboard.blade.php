@@ -50,11 +50,20 @@
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-500">Taux de Réussite</p>
-                    <p class="text-2xl font-semibold mt-1">98%</p>
+                    @if($isAdmin)
+                        <p class="text-sm text-gray-500">Total Écoles Actives</p>
+                        <p class="text-2xl font-semibold mt-1">{{ $totalSchools }}</p>
+                    @else
+                        <p class="text-sm text-gray-500">Taux de Réussite</p>
+                        <p class="text-2xl font-semibold mt-1">98%</p>
+                    @endif
                 </div>
                 <div class="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary rounded-lg">
-                    <i class="ri-line-chart-line"></i>
+                    @if($isAdmin)
+                        <i class="ri-building-line"></i>
+                    @else
+                        <i class="ri-line-chart-line"></i>
+                    @endif
                 </div>
             </div>
         </div>
@@ -62,14 +71,61 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div class="bg-white p-6 rounded-lg shadow-sm">
-            <h3 class="font-semibold mb-6">Progression des Inscriptions</h3>
+            <h3 class="font-semibold mb-6">Progression des Inscriptions ({{ $currentSchoolName ?? 'École non définie' }})</h3>
             <div class="h-60" id="enrollmentChart"></div>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-sm">
-            <h3 class="font-semibold mb-6">Distribution des Niveaux</h3>
+            <h3 class="font-semibold mb-6">Distribution des Niveaux ({{ $currentSchoolName ?? 'École non définie' }})</h3>
             <div class="h-60" id="levelChart"></div>
         </div>
     </div>
+
+    @if($isAdmin)
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h3 class="font-semibold mb-6">Progression des Inscriptions (Global toutes écoles)</h3>
+                <div class="h-60" id="enrollmentChartGlobal"></div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h3 class="font-semibold mb-6">Distribution des Niveaux (Global toutes écoles)</h3>
+                <div class="h-60" id="levelChartGlobal"></div>
+            </div>
+        </div>
+    @endif
+
+    @if($isAdmin)
+        <div class="mt-6 bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="p-6 border-b">
+                <h3 class="font-semibold">Statistiques par école</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-sm text-gray-500">
+                            <th class="px-6 py-4 font-medium">École</th>
+                            <th class="px-6 py-4 font-medium">Élèves</th>
+                            <th class="px-6 py-4 font-medium">Enseignants</th>
+                            <th class="px-6 py-4 font-medium">Cours actifs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($schoolStats as $schoolStat)
+                            <tr class="border-t">
+                                <td class="px-6 py-4 font-medium text-gray-800">{{ $schoolStat['name'] }}</td>
+                                <td class="px-6 py-4">{{ $schoolStat['students_count'] }}</td>
+                                <td class="px-6 py-4">{{ $schoolStat['teachers_count'] }}</td>
+                                <td class="px-6 py-4">{{ $schoolStat['active_courses_count'] }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">Aucune école active trouvée.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
 
     <div class="mt-6 bg-white rounded-lg shadow-sm">
         <div class="p-6 border-b">
@@ -159,9 +215,59 @@
             }]
         });
 
+        let enrollmentChartGlobal = null;
+        let levelChartGlobal = null;
+
+        @if($isAdmin)
+            const enrollmentGlobalEl = document.getElementById('enrollmentChartGlobal');
+            const levelGlobalEl = document.getElementById('levelChartGlobal');
+
+            if (enrollmentGlobalEl) {
+                enrollmentChartGlobal = echarts.init(enrollmentGlobalEl);
+                enrollmentChartGlobal.setOption({
+                    tooltip: { trigger: 'axis' },
+                    legend: { type: 'scroll', top: 0 },
+                    grid: { top: 40 },
+                    xAxis: {
+                        type: 'category',
+                        data: @json($globalEnrollmentLabels),
+                        axisLine: { show: false },
+                        axisTick: { show: false },
+                    },
+                    yAxis: { type: 'value', show: false },
+                    series: @json($globalEnrollmentSeries)
+                });
+            }
+
+            if (levelGlobalEl) {
+                levelChartGlobal = echarts.init(levelGlobalEl);
+                levelChartGlobal.setOption({
+                    tooltip: { trigger: 'item' },
+                    series: [{
+                        type: 'pie',
+                        radius: ['60%', '80%'],
+                        avoidLabelOverlap: false,
+                        data: @json($globalLevelChartData),
+                        label: { show: false },
+                        itemStyle: {
+                            borderRadius: 4,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }
+                    }]
+                });
+            }
+        @endif
+
         window.addEventListener('resize', function() {
             enrollmentChart.resize();
             levelChart.resize();
+            if (enrollmentChartGlobal) {
+                enrollmentChartGlobal.resize();
+            }
+            if (levelChartGlobal) {
+                levelChartGlobal.resize();
+            }
         });
     });
 </script>

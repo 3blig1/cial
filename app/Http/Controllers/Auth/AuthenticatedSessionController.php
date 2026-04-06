@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\School;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        $schools = School::where('is_active', true)->orderBy('name')->get();
+
+        return view('auth.login', compact('schools'));
     }
 
     /**
@@ -25,6 +28,11 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        
+         // Invalide les autres sessions de l'utilisateur.
+        // Cela garantit que l'utilisateur ne peut être connecté que sur un seul appareil à la fois.
+        Auth::logoutOtherDevices($request->password);
+
 
         $request->session()->regenerate();
 

@@ -3,7 +3,17 @@
 @section('title', 'Gestion des Utilisateurs')
 
 @section('header-content')
-    <h1 class="text-xl font-semibold text-gray-800">Gestion des Utilisateurs & Permissions</h1>
+    <h1 class="text-2xl font-bold text-gray-900">Gestion des utilisateurs</h1>
+    <div class="ml-auto">
+        <form action="{{ route('users.index') }}" method="GET" class="flex items-center">
+            <input type="text" name="search" placeholder="Rechercher par nom ou email..."
+                   class="w-64 px-4 py-2 border border-gray-300 rounded-l-button focus:outline-none focus:ring-2 focus:ring-primary"
+                   value="{{ request('search') }}">
+            <button type="submit" class="px-4 py-2 bg-primary text-white font-medium rounded-r-button hover:bg-primary/90">
+                <i class="ri-search-line"></i>
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('content')
@@ -25,6 +35,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Écoles autorisées</th>
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
         </thead>
@@ -37,7 +48,12 @@
                                 <img class="h-10 w-10 rounded-full object-cover" src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&color=7F9CF5&background=EBF4FF" alt="Avatar de {{ $user->name }}">
                             </div>
                             <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                <div class="text-sm font-medium text-gray-900 flex items-center gap-2">
+                                    <span>{{ $user->name }}</span>
+                                    @if($user->isAdmin())
+                                        <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700">Admin global</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -60,13 +76,37 @@
                             </div>
                         </form>
                     </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        @if($user->isAdmin())
+                            <span class="inline-flex items-center px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700">
+                                Toutes les écoles (Admin global)
+                            </span>
+                        @else
+                            <form action="{{ route('users.updateSchools', $user) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <div class="flex items-center gap-2">
+                                    <select name="school_ids[]" multiple size="3" class="w-full px-3 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
+                                        @foreach($schools as $school)
+                                            <option value="{{ $school->id }}" @selected($user->schools->contains('id', $school->id))>
+                                                {{ $school->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="px-3 py-1 bg-primary text-white font-medium rounded-button hover:bg-primary/90 text-xs">
+                                        OK
+                                    </button>
+                                </div>
+                            </form>
+                        @endif
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         {{-- Actions like view profile could be added here --}}
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                    <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                         Aucun utilisateur trouvé.
                     </td>
                 </tr>

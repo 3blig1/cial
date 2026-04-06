@@ -74,7 +74,7 @@
             <div class="flex items-center gap-8">
                 @foreach(['A1', 'A2', 'B1', 'B2', 'C1'] as $level)
                 <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="language_level" value="{{ $level }}" @if(old('language_level') == $level) checked @endif>
+                    <input type="radio" name="language_level" value="{{ $level }}" @if(old('language_level') == $level) checked @endif required>
                     <div class="custom-radio"></div>
                     <span class="text-sm">{{ $level }}</span>
                 </label>

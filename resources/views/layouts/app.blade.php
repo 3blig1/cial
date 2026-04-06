@@ -85,12 +85,33 @@
                     <a href="{{ route('courses.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('courses.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-book-open-line w-5 h-5 mr-3"></i><span>Cours</span>
                     </a>
+                    <a href="{{ route('exams.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('exams.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-file-list-2-line w-5 h-5 mr-3"></i><span>Exams</span>
+                    </a>
+                    <a href="{{ route('subjects.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('subjects.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-book-mark-line w-5 h-5 mr-3"></i><span>Matières</span>
+                    </a>
+                    <a href="{{ route('schools.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('schools.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-building-line w-5 h-5 mr-3"></i><span>Écoles</span>
+                    </a>
+                    <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('users.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-user-line w-5 h-5 mr-3"></i><span>utilisateurs</span>
+                    </a>
                 @endif
                 @if(auth()->user()->hasAnyRole(['admin', 'secretary']))
                     <a href="{{ route('reports.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('reports.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-file-chart-line w-5 h-5 mr-3"></i><span>Rapports</span>
                     </a>
+                    <a href="{{ route('pending-users.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('pending-users.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-time-line w-5 h-5 mr-3"></i><span>Liste d'attente</span>
+                    </a>
+                    <a href="{{ route('pending-register.show') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('pending-register.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-time-line w-5 h-5 mr-3"></i><span>Inscription en attente</span>
+                    </a>
                 @endif
+                <a href="{{ route('chat.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('chat.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <i class="ri-chat-3-line w-5 h-5 mr-3"></i><span>Messagerie</span>
+                </a>
 
                 <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('profile.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-user-line w-5 h-5 mr-3"></i><span>Mon Profil</span>
@@ -116,16 +137,35 @@
 
                     <!-- Menu utilisateur (toujours présent) -->
                     <div class="flex items-center gap-4 ml-4" x-data="{ open: false }">
-                        <button class="relative">
-                            <div class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-full">
-                                <i class="ri-notification-line"></i>
+                        @php
+                            $currentSchool = \App\Models\School::find(session('school_id'));
+                        @endphp
+
+                        @if($currentSchool)
+                            <div class="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium max-w-[170px] sm:max-w-none">
+                                <i class="ri-building-line"></i>
+                                <span class="truncate">École : {{ $currentSchool->name }}</span>
                             </div>
-                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
+                        @endif
+
+                        <a href="{{ route('chat.index') }}" class="relative">
+                            <div class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-full">
+                                <i class="ri-notification-line"  ></i>
+                            </div>
+                            @php
+                                $totalUnread = \App\Http\Controllers\ChatRoomController::getTotalUnreadMessages(auth()->id());
+                            @endphp
+                            <span class="absolute top-1 right-1 min-w-[18px] h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold px-1">
+                                {{ $totalUnread > 0 ? $totalUnread : '' }}
+                            </span>
+                        </a>
                         <div class="relative">
                             <button @click="open = !open" class="flex items-center gap-2">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=7F9CF5&background=EBF4FF" class="w-10 h-10 rounded-full object-cover" alt="Avatar de {{ auth()->user()->name }}">
                                 <span class="text-sm font-medium">{{ auth()->user()->name }}</span>
+                                @if(auth()->user()->isAdmin())
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700">Admin global</span>
+                                @endif
                                 <i class="ri-arrow-down-s-line"></i>
                             </button>
                             <div x-show="open" @click.away="open = true" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10" style="display: none;" x-transition>
@@ -137,11 +177,25 @@
                 </div>
             </header>
             <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                @if (session('success'))
+                    <div class="bg-violet-100 border-l-4 border-violet-500 text-violet-700 p-4 mb-6 rounded-r-md" role="alert">
+                        <p class="font-bold">Succès</p>
+                        <p>{{ session('success') }}</p>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="bg-violet-50 border-l-4 border-violet-400 text-violet-700 p-4 mb-6 rounded-r-md" role="alert">
+                        <p class="font-bold">Erreur</p>
+                        <p>{{ session('error') }}</p>
+                    </div>
+                @endif
                 @yield('content')
             </div>
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@alpinejs/cdn@3.x.x/dist/cdn.min.js" defer></script>
     @stack('scripts')
+    @yield('scripts')
 </body>
 </html>

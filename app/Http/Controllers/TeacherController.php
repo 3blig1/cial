@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -91,6 +92,14 @@ class TeacherController extends Controller
 
     public function destroy(Teacher $teacher)
     {
+        // Rechercher l'utilisateur correspondant par e-mail
+        $user = User::where('email', $teacher->email)->first();
+
+        // Empêcher la suppression si l'enseignant est aussi un administrateur
+        if ($user && $user->isAdmin()) {
+            return redirect()->route('teachers.index')->with('error', 'Vous ne pouvez pas supprimer un enseignant qui est administrateur.');
+        }
+
         if ($teacher->profile_photo_path) {
             Storage::disk('public')->delete($teacher->profile_photo_path);
         }

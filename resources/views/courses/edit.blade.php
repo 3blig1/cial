@@ -47,6 +47,15 @@
                 </select>
             </div>
             <div>
+                <label for="subject_id" class="block text-sm font-medium text-gray-700 mb-1">Matière</label>
+                <select name="subject_id" id="subject_id" class="w-full px-3 py-2 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary/20" required>
+                    <option value="">Sélectionner une matière</option>
+                    @foreach(App\Models\Subject::all() as $subject)
+                        <option value="{{ $subject->id }}" @if(old('subject_id', $course->subject_id) == $subject->id) selected @endif>{{ $subject->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label for="teacher_id" class="block text-sm font-medium text-gray-700 mb-1">Enseignant</label>
                 <select name="teacher_id" id="teacher_id" class="w-full px-3 py-2 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary/20" required>
                     <option value="">Sélectionner un enseignant</option>

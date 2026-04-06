@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Student;
+use App\Models\PendingStudent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -82,10 +83,13 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+        // Debug : affiche toutes les données reçues
+        \Log::info('Formulaire reçu', $request->all());
+
         $validated = $request->validate([
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email',
+            'email' => 'required|email|unique:pending_students,email',
             'date_of_birth' => 'required|date',
             'language_level' => 'required|in:A1,A2,B1,B2,C1',
             'profile_photo' => 'nullable|image|max:2048', // 2MB Max
@@ -95,15 +99,25 @@ class StudentController extends Controller
             'emergency_contact_email' => 'nullable|email|max:255',
         ]);
 
-        $studentData = $validated;
+        $studentData = [
+            'last_name' => $validated['last_name'],
+            'first_name' => $validated['first_name'],
+            'email' => $validated['email'],
+            'date_of_birth' => $validated['date_of_birth'],
+            'language_level' => $validated['language_level'],
+            'emergency_contact_name' => $validated['emergency_contact_name'] ?? null,
+            'emergency_contact_relationship' => $validated['emergency_contact_relationship'] ?? null,
+            'emergency_contact_phone' => $validated['emergency_contact_phone'] ?? null,
+            'emergency_contact_email' => $validated['emergency_contact_email'] ?? null,
+        ];
 
         if ($request->hasFile('profile_photo')) {
             $studentData['profile_photo_path'] = $request->file('profile_photo')->store('profile-photos', 'public');
         }
 
-        Student::create($studentData);
+        PendingStudent::create($studentData);
 
-        return redirect()->route('students.index')->with('success', 'Élève ajouté avec succès.');
+        return redirect()->route('students.index')->with('success', "L'élève a été ajouté à la liste d'attente.");
     }
 
     /**

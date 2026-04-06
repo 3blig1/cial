@@ -168,7 +168,7 @@
 
         <div class="clearfix">
             @if($studentPhotoSrc)
-                <img src="{{ $studentPhotoSrc }}" alt="Photo de profil" class="profile-picture">
+                <img src="{{ $studentPhotoSrc }}" alt="Photo de {{ $student->first_name }} {{ $student->last_name }}" class="profile-picture">
             @endif
 
             <h2>Informations de l'étudiant</h2>
@@ -179,17 +179,30 @@
                 <tr><th>Niveau de langue</th><td>{{ $student->language_level }}</td></tr>
                @php
                     $fees = [
-                        'A1' => '55.000 fr',
-                        'A2' => '60.000 fr',
-                        'B1' => '75.000 fr',
-                        'B2' => '80.000 fr',
-                        'C1' => '85.000 fr',
+                        'A1' => '110.000 fr',
+                        'A2' => '110.000 fr',
+                        'B1' => '110.000 fr',
+                        'B2' => '120.000 fr',
+                        'C1' => '120.000 fr',
                     ];
                 @endphp
+
+                @php
+                    $Mois = [
+                        'A1' => '2 Mois',
+                        'A2' => '2 Mois',
+                        'B1' => '2 Mois',
+                        'B2' => '2 Mois',
+                        'C1' => '3 Mois',
+                    ];
+                @endphp
+
                 @if(isset($fees[$student->language_level]))
                     <tr><th>Frais de Formation</th><td>{{ $fees[$student->language_level] }}</td></tr>
                 @endif
-
+                @if(isset($Mois[$student->language_level]))
+                    <tr><th>Durée de la formation</th><td>{{ $Mois[$student->language_level] ?? 'Non spécifié' }}</td></tr>
+                @endif
             </table>
         </div>
 

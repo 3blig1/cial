@@ -3,25 +3,25 @@
 @section('title', 'Liste des Élèves')
 
 @section('header-content')
-
-    
-        <h1 class="text-xl font-semibold text-gray-800">Gestion des Élèves</h1>
-        <div class="flex items-center gap-4">
-            <form method="GET" action="{{ route('students.index') }}">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <i class="ri-search-line text-gray-400"></i>
-                    </div>
-                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Rechercher un élève..." class="pl-10 pr-4 py-2 w-80 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm">
+    <h1 class="text-xl font-semibold text-gray-800">Gestion des Élèves</h1>
+    <div class="flex items-center gap-4">
+        <form method="GET" action="{{ route('students.index') }}">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="ri-search-line text-gray-400"></i>
                 </div>
-            </form>
-            <a href="{{ route('students.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2">
-                <i class="ri-add-line"></i>
-                <span>Ajouter un élève</span>
-            </a>
-        </div>
-    
-
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="Rechercher un élève..." class="pl-10 pr-4 py-2 w-80 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm">
+            </div>
+        </form>
+        <a href="{{ route('students.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2">
+            <i class="ri-add-line"></i>
+            <span>Ajouter un élève</span>
+        </a>
+        <a href="{{ route('pending-students.index') }}" class="px-4 py-2 bg-yellow-500 text-white font-medium rounded-button hover:bg-yellow-600 flex items-center gap-2">
+            <i class="ri-time-line"></i>
+            <span>Liste d'attente</span>
+        </a>
+    </div>
 @endsection
 
 @section('content')
@@ -64,13 +64,13 @@
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a href="{{ route('students.show', $student) }}" class="text-primary hover:text-primary/80">Voir</a>
                         <a href="{{ route('students.edit', $student) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Éditer</a>
-                        @can ('admin')
+                        @if(auth()->user()->isAdmin())
                         <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élève ?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
                         </form>
-                        @endcan
+                        @endif
                     </td>
                 </tr>
             @empty
