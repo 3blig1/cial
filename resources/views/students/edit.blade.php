@@ -3,17 +3,16 @@
 @section('title', 'Modifier un Élève')
 
 @section('header-content')
-
+    <div class="flex items-center gap-3">
         <a href="{{ route('students.index') }}" class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
             <i class="ri-arrow-left-line"></i>
             <span>Retour à la liste</span>
         </a>
-    
+        <h1 class="text-xl font-semibold text-gray-800">Modifier l'Élève : {{ $student->first_name }} {{ $student->last_name }}</h1>
+    </div>
 @endsection
 
 @section('content')
-<h1 class="text-2xl font-semibold mb-8">Modifier l'Élève : {{ $student->first_name }} {{ $student->last_name }}</h1>
-
 @if ($errors->any())
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
         <strong class="font-bold">Oups !</strong>
