@@ -31,7 +31,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->email }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->language_level }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div class="flex flex-wrap justify-end gap-3">
+                    <div class="flex flex-nowrap items-center justify-end gap-3 whitespace-nowrap">
                         <form action="{{ route('pending-students.activate', $student) }}" method="POST" class="inline-block">
                             @csrf
                             <button type="submit" class="text-green-600 hover:text-green-900">Activer</button>
