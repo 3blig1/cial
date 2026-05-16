@@ -34,12 +34,16 @@
                     <div class="flex flex-nowrap items-center justify-end gap-3 whitespace-nowrap">
                         <form action="{{ route('pending-students.activate', $student) }}" method="POST" class="inline-block">
                             @csrf
-                            <button type="submit" class="text-green-600 hover:text-green-900">Activer</button>
+                            <button type="submit" class="text-green-600 hover:text-green-900" title="Activer" aria-label="Activer">
+                                <i class="ri-check-line"></i>
+                            </button>
                         </form>
                         <form action="{{ route('pending-students.destroy', $student) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet étudiant ?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                            <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer" aria-label="Supprimer">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
                         </form>
                         <a href="{{ route('pending-students.downloadRegistrationForm', ['pendingStudent' => $student->id]) }}" class="inline-block text-blue-600 hover:text-blue-900" title="Télécharger la fiche d'inscription">
                             <i class="ri-download-2-line"></i>
