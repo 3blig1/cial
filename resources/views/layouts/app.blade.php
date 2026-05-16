@@ -133,7 +133,7 @@
                     </div>
 
                     <!-- Menu utilisateur (toujours présent) -->
-                    <div class="flex items-center gap-4 ml-4" x-data="{ open: false }">
+                    <div class="flex items-center gap-4 ml-4">
                         @php
                             $currentSchool = \App\Models\School::find(session('school_id'));
                         @endphp
@@ -156,8 +156,8 @@
                                 {{ $totalUnread > 0 ? $totalUnread : '' }}
                             </span>
                         </a>
-                        <div class="relative" x-data="{ open: false }">
-                            <button type="button" @click="open = !open" class="flex items-center gap-2">
+                        <div class="relative">
+                            <button type="button" id="user-menu-button" class="flex items-center gap-2">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=7F9CF5&background=EBF4FF" class="w-10 h-10 rounded-full object-cover" alt="Avatar de {{ auth()->user()->name }}">
                                 <span class="text-sm font-medium">{{ auth()->user()->name }}</span>
                                 @if(auth()->user()->isAdmin())
@@ -165,7 +165,7 @@
                                 @endif
                                 <i class="ri-arrow-down-s-line"></i>
                             </button>
-                            <div x-cloak x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-30 overflow-hidden" x-transition>
+                            <div id="user-menu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-30 overflow-hidden">
                                 <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     <i class="ri-user-line text-gray-500"></i>
                                     <span>Mon profil</span>
@@ -200,7 +200,27 @@
             </div>
         </main>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/cdn@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const button = document.getElementById('user-menu-button');
+            const menu = document.getElementById('user-menu');
+
+            if (!button || !menu) {
+                return;
+            }
+
+            button.addEventListener('click', function (event) {
+                event.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!menu.contains(event.target) && !button.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
     @stack('scripts')
     @yield('scripts')
 </body>
