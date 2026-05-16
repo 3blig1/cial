@@ -33,6 +33,7 @@
         }
     </script>
     <style>
+        [x-cloak] { display: none !important; }
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -155,8 +156,8 @@
                                 {{ $totalUnread > 0 ? $totalUnread : '' }}
                             </span>
                         </a>
-                        <div class="relative">
-                            <button @click="open = !open" class="flex items-center gap-2">
+                        <div class="relative" x-data="{ open: false }">
+                            <button type="button" @click="open = !open" class="flex items-center gap-2">
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=7F9CF5&background=EBF4FF" class="w-10 h-10 rounded-full object-cover" alt="Avatar de {{ auth()->user()->name }}">
                                 <span class="text-sm font-medium">{{ auth()->user()->name }}</span>
                                 @if(auth()->user()->isAdmin())
@@ -164,7 +165,7 @@
                                 @endif
                                 <i class="ri-arrow-down-s-line"></i>
                             </button>
-                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-10 overflow-hidden" style="display: none;" x-transition>
+                            <div x-cloak x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-30 overflow-hidden" x-transition>
                                 <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     <i class="ri-user-line text-gray-500"></i>
                                     <span>Mon profil</span>
