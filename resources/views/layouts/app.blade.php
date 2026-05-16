@@ -66,12 +66,16 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="min-h-screen flex">
-        <aside class="w-64 bg-white shadow-lg">
-            <div class="p-4 flex items-center gap-2">
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-slate-900/40 lg:hidden"></div>
+    <div class="min-h-screen lg:flex">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex h-screen w-72 max-w-[85vw] -translate-x-full flex-col bg-white shadow-xl transition-transform duration-300 ease-out lg:static lg:z-auto lg:h-auto lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-lg">
+            <div class="flex items-center justify-between p-4">
                 <a href="{{ route('dashboard') }}"><img src="{{ asset('logo/Logo_cial.png') }}" alt="Logo FormaLang" class="h-12"></a>
+                <button type="button" data-sidebar-toggle class="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 lg:hidden">
+                    <i class="ri-close-line text-xl"></i>
+                </button>
             </div>
-            <nav class="mt-8 overflow-y-auto max-h-[calc(100vh-200px)]">
+            <nav class="mt-4 flex-1 overflow-y-auto pb-6 lg:max-h-[calc(100vh-120px)]">
                 <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('dashboard') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                     <i class="ri-dashboard-line w-5 h-5 mr-3"></i><span>Tableau de bord</span>
                 </a>
@@ -113,65 +117,72 @@
                
             </nav>
         </aside>
-        <main class="flex-1">
+        <main class="min-w-0 flex-1 lg:ml-0">
             <header class="bg-white shadow-sm sticky top-0 z-20">
-                <div class="flex items-center justify-between px-8 py-4">
+                <div class="flex flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
                     <!-- Contenu spécifique à la page (titre, recherche, boutons) -->
-                    <div class="flex-1 flex items-center gap-4">
-                        @yield('header-content')
-                    </div>
-
-                    <!-- Menu utilisateur (toujours présent) -->
-                    <div class="flex items-center gap-4 ml-4">
-                        @php
-                            $currentSchool = \App\Models\School::find(session('school_id'));
-                        @endphp
-
-                        @if($currentSchool)
-                            <div class="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium max-w-[170px] sm:max-w-none">
-                                <i class="ri-building-line"></i>
-                                <span class="truncate">École : {{ $currentSchool->name }}</span>
-                            </div>
-                        @endif
-
-                        <a href="{{ route('chat.index') }}" class="relative">
-                            <div class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-full">
-                                <i class="ri-notification-line"  ></i>
-                            </div>
-                            @php
-                                $totalUnread = \App\Http\Controllers\ChatRoomController::getTotalUnreadMessages(auth()->id());
-                            @endphp
-                            <span class="absolute top-1 right-1 min-w-[18px] h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold px-1">
-                                {{ $totalUnread > 0 ? $totalUnread : '' }}
-                            </span>
-                        </a>
-                        <div class="relative">
-                            <button type="button" id="user-menu-button" class="flex items-center gap-2">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=7F9CF5&background=EBF4FF" class="w-10 h-10 rounded-full object-cover" alt="Avatar de {{ auth()->user()->name }}">
-                                <span class="text-sm font-medium">{{ auth()->user()->name }}</span>
-                                @if(auth()->user()->isAdmin())
-                                    <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700">Admin global</span>
-                                @endif
-                                <i class="ri-arrow-down-s-line"></i>
+                    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                        <div class="flex min-w-0 flex-1 items-start gap-3 sm:items-center">
+                            <button type="button" data-sidebar-toggle class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 lg:hidden">
+                                <i class="ri-menu-line text-xl"></i>
                             </button>
-                            <div id="user-menu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-30 overflow-hidden">
-                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="ri-user-line text-gray-500"></i>
-                                    <span>Mon profil</span>
-                                </a>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 text-left">
-                                        <i class="ri-logout-box-r-line"></i>
-                                        <span>Déconnexion</span>
-                                    </button>
-                                </form>
+                            <div class="flex min-w-0 flex-1 flex-wrap items-center gap-3">
+                                @yield('header-content')
+                            </div>
+                        </div>
+
+                        <!-- Menu utilisateur (toujours présent) -->
+                        <div class="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
+                            @php
+                                $currentSchool = \App\Models\School::find(session('school_id'));
+                            @endphp
+
+                            @if($currentSchool)
+                                <div class="flex max-w-full items-center gap-2 rounded-full bg-indigo-50 px-2 py-1.5 text-xs font-medium text-indigo-700 sm:px-3">
+                                    <i class="ri-building-line shrink-0"></i>
+                                    <span class="max-w-[160px] truncate sm:max-w-[220px]">École : {{ $currentSchool->name }}</span>
+                                </div>
+                            @endif
+
+                            <a href="{{ route('chat.index') }}" class="relative shrink-0">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-50">
+                                    <i class="ri-notification-line"></i>
+                                </div>
+                                @php
+                                    $totalUnread = \App\Http\Controllers\ChatRoomController::getTotalUnreadMessages(auth()->id());
+                                @endphp
+                                <span class="absolute right-1 top-1 flex h-5 min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                                    {{ $totalUnread > 0 ? $totalUnread : '' }}
+                                </span>
+                            </a>
+                            <div class="relative max-w-full">
+                                <button type="button" id="user-menu-button" class="flex max-w-full items-center gap-2 rounded-full px-1 py-1 hover:bg-gray-50 sm:px-2">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=7F9CF5&background=EBF4FF" class="h-10 w-10 rounded-full object-cover" alt="Avatar de {{ auth()->user()->name }}">
+                                    <span class="hidden max-w-[120px] truncate text-sm font-medium sm:inline">{{ auth()->user()->name }}</span>
+                                    @if(auth()->user()->isAdmin())
+                                        <span class="hidden rounded-full bg-indigo-100 px-2 py-0.5 text-xs text-indigo-700 md:inline">Admin global</span>
+                                    @endif
+                                    <i class="ri-arrow-down-s-line"></i>
+                                </button>
+                                <div id="user-menu" class="hidden absolute right-0 mt-2 w-52 overflow-hidden rounded-md bg-white py-1 shadow-lg z-30">
+                                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="ri-user-line text-gray-500"></i>
+                                        <span>Mon profil</span>
+                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100">
+                                            <i class="ri-logout-box-r-line"></i>
+                                            <span>Déconnexion</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
-            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
                 @if (session('success'))
                     <div class="bg-violet-100 border-l-4 border-violet-500 text-violet-700 p-4 mb-6 rounded-r-md" role="alert">
                         <p class="font-bold">Succès</p>
@@ -193,6 +204,45 @@
         document.addEventListener('DOMContentLoaded', function () {
             const button = document.getElementById('user-menu-button');
             const menu = document.getElementById('user-menu');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const sidebarToggles = document.querySelectorAll('[data-sidebar-toggle]');
+            const sidebarLinks = sidebar ? sidebar.querySelectorAll('a') : [];
+
+            const closeSidebar = function () {
+                if (!sidebar || window.innerWidth >= 1024) {
+                    return;
+                }
+
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            };
+
+            const toggleSidebar = function () {
+                if (!sidebar || window.innerWidth >= 1024) {
+                    return;
+                }
+
+                const isHidden = sidebar.classList.contains('-translate-x-full');
+                sidebar.classList.toggle('-translate-x-full', !isHidden);
+                sidebarOverlay.classList.toggle('hidden', !isHidden);
+                document.body.classList.toggle('overflow-hidden', isHidden);
+            };
+
+            sidebarToggles.forEach(function (toggle) {
+                toggle.addEventListener('click', function () {
+                    toggleSidebar();
+                });
+            });
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+
+            sidebarLinks.forEach(function (link) {
+                link.addEventListener('click', closeSidebar);
+            });
 
             if (!button || !menu) {
                 return;
@@ -206,6 +256,13 @@
             document.addEventListener('click', function (event) {
                 if (!menu.contains(event.target) && !button.contains(event.target)) {
                     menu.classList.add('hidden');
+                }
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 1024) {
+                    sidebarOverlay.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
                 }
             });
         });
