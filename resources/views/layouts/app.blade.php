@@ -77,6 +77,12 @@
                     <a href="{{ route('students.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('students.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-user-line w-5 h-5 mr-3"></i><span>Élèves</span>
                     </a>
+                     <a href="{{ route('pending-users.students') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('pending-users.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-time-line w-5 h-5 mr-3"></i><span>Liste d'attente</span>
+                    </a>   
+                    <a href="{{ route('reports.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('reports.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-file-chart-line w-5 h-5 mr-3"></i><span>Rapports</span>
+                    </a>
                 @endif
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('teachers.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('teachers.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
@@ -96,17 +102,6 @@
                     </a>
                     <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('users.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-user-line w-5 h-5 mr-3"></i><span>utilisateurs</span>
-                    </a>
-                @endif
-                @if(auth()->user()->hasAnyRole(['admin', 'secretary']))
-                    <a href="{{ route('reports.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('reports.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <i class="ri-file-chart-line w-5 h-5 mr-3"></i><span>Rapports</span>
-                    </a>
-                    <a href="{{ route('pending-users.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('pending-users.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <i class="ri-time-line w-5 h-5 mr-3"></i><span>Liste d'attente</span>
-                    </a>
-                    <a href="{{ route('pending-register.show') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('pending-register.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <i class="ri-time-line w-5 h-5 mr-3"></i><span>Inscription en attente</span>
                     </a>
                 @endif
                 <a href="{{ route('chat.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('chat.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
