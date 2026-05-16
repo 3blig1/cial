@@ -11,7 +11,17 @@ class PendingStudentController extends Controller
     // Affiche la liste d'attente
     public function index()
     {
-        $pendingStudents = PendingStudent::all();
+        $schoolId = session('school_id');
+
+        $pendingStudents = PendingStudent::query()
+            ->when(
+                $schoolId,
+                fn ($query) => $query->where('school_id', $schoolId),
+                fn ($query) => $query->whereRaw('1 = 0')
+            )
+            ->latest()
+            ->get();
+
         return view('pending_students.index', compact('pendingStudents'));
     }
 
