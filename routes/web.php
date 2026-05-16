@@ -131,8 +131,8 @@ Route::middleware(['auth', 'school.context'])->group(function () {
             Route::get('/pending-students/{pendingStudent}/registration-form', [\App\Http\Controllers\PendingStudentController::class, 'downloadRegistrationForm'])->name('pending-students.downloadRegistrationForm');
         });
         
-        // Suppression des étudiants en attente (admin uniquement)
-        Route::middleware(['auth', 'role:admin'])->group(function () {
+        // Suppression des étudiants en attente (admin et secrétaire)
+        Route::middleware(['auth', 'role:admin,secretary'])->group(function () {
             Route::delete('/pending-students/{pendingStudent}', [\App\Http\Controllers\PendingStudentController::class, 'destroy'])->name('pending-students.destroy');
         });
     });

@@ -38,7 +38,7 @@
                                 <i class="ri-check-line"></i>
                             </button>
                         </form>
-                        @if(auth()->user()->isAdmin())
+                        @if(auth()->user()->hasAnyRole(['admin', 'secretary']))
                         <form action="{{ route('pending-students.destroy', $student) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet étudiant ?');">
                             @csrf
                             @method('DELETE')
