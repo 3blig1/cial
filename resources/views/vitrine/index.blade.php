@@ -1,5 +1,12 @@
 @extends('vitrine.layouts.app')
 
+@section('title', 'Accueil - CIAL Centre Interculturel Allemand')
+
+@push('head')
+<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo/Logo_icone.png') }}?v=3">
+<link rel="shortcut icon" href="{{ asset('logo/Logo_icone.png') }}?v=3">
+@endpush
+
 @section('content')
     
     @include('vitrine.layouts.header')
