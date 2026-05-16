@@ -110,18 +110,7 @@
                     <i class="ri-chat-3-line w-5 h-5 mr-3"></i><span>Messagerie</span>
                 </a>
 
-                <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('profile.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <i class="ri-user-line w-5 h-5 mr-3"></i><span>Mon Profil</span>
-                    </a>
-
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <a href="{{ route('logout') }}" class="flex items-center px-4 py-3"
-                                            onclick="event.preventDefault(); this.closest('form').submit();"
-                                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="ri-user-line w-5 h-5 mr-3" style="color: red;"></i><span style="color: red;">Déconnexion</span>
-                                    </a>
-                                </form>
+               
             </nav>
         </aside>
         <main class="flex-1">
