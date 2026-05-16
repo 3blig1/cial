@@ -125,11 +125,15 @@ Route::middleware(['auth', 'school.context'])->group(function () {
         });
 
         // Interface d'administration pour la liste d'attente des étudiants
-        Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::middleware(['auth', 'role:admin,secretary'])->group(function () {
             Route::get('/pending-students', [\App\Http\Controllers\PendingStudentController::class, 'index'])->name('pending-students.index');
             Route::post('/pending-students/{pendingStudent}/activate', [\App\Http\Controllers\PendingStudentController::class, 'activate'])->name('pending-students.activate');
-            Route::delete('/pending-students/{pendingStudent}', [\App\Http\Controllers\PendingStudentController::class, 'destroy'])->name('pending-students.destroy');
             Route::get('/pending-students/{pendingStudent}/registration-form', [\App\Http\Controllers\PendingStudentController::class, 'downloadRegistrationForm'])->name('pending-students.downloadRegistrationForm');
+        });
+        
+        // Suppression des étudiants en attente (admin uniquement)
+        Route::middleware(['auth', 'role:admin'])->group(function () {
+            Route::delete('/pending-students/{pendingStudent}', [\App\Http\Controllers\PendingStudentController::class, 'destroy'])->name('pending-students.destroy');
         });
     });
 

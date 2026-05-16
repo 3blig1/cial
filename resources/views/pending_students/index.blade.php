@@ -38,6 +38,7 @@
                                 <i class="ri-check-line"></i>
                             </button>
                         </form>
+                        @if(auth()->user()->isAdmin())
                         <form action="{{ route('pending-students.destroy', $student) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet étudiant ?');">
                             @csrf
                             @method('DELETE')
@@ -45,6 +46,7 @@
                                 <i class="ri-delete-bin-line"></i>
                             </button>
                         </form>
+                        @endif
                         <a href="{{ route('pending-students.downloadRegistrationForm', ['pendingStudent' => $student->id]) }}" class="inline-block text-blue-600 hover:text-blue-900" title="Télécharger la fiche d'inscription">
                             <i class="ri-download-2-line"></i>
                         </a>
