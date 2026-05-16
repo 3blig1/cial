@@ -3,15 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailyReport;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DailyReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reports = DailyReport::with('author')->latest()->paginate(10);
-        return view('reports.index', compact('reports'));
+        $reports = DailyReport::with('author')
+            ->when($request->filled('report_date'), function ($query) use ($request) {
+                $query->whereDate('report_date', $request->input('report_date'));
+            })
+            ->when($request->filled('author_id'), function ($query) use ($request) {
+                $query->where('user_id', $request->input('author_id'));
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $authors = User::query()
+            ->whereHas('reports')
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return view('reports.index', compact('reports', 'authors'));
     }
 
     public function create()

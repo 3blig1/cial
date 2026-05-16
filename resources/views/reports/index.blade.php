@@ -4,10 +4,31 @@
 
 @section('header-content')
     <h1 class="text-xl font-semibold text-gray-800">Rapports Journaliers</h1>
-    <a href="{{ route('reports.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2 ml-auto">
-        <i class="ri-add-line"></i>
-        <span>Nouveau Rapport</span>
-    </a>
+    <div class="ml-auto flex items-center gap-3">
+        <form action="{{ route('reports.index') }}" method="GET" class="flex items-center gap-2">
+            <input type="date" name="report_date" value="{{ request('report_date') }}" class="rounded-md border-gray-300 text-sm focus:border-primary focus:ring-primary">
+            <select name="author_id" class="rounded-md border-gray-300 text-sm focus:border-primary focus:ring-primary">
+                <option value="">Tous les auteurs</option>
+                @foreach($authors as $author)
+                    <option value="{{ $author->id }}" @selected(request('author_id') == $author->id)>{{ $author->name }}</option>
+                @endforeach
+            </select>
+            <button type="submit" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-button hover:bg-gray-50 flex items-center gap-2">
+                <i class="ri-filter-3-line"></i>
+                <span>Filtrer</span>
+            </button>
+            @if(request()->filled('report_date') || request()->filled('author_id'))
+                <a href="{{ route('reports.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-button hover:bg-gray-200 flex items-center gap-2">
+                    <i class="ri-close-line"></i>
+                    <span>Réinitialiser</span>
+                </a>
+            @endif
+        </form>
+        <a href="{{ route('reports.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2">
+            <i class="ri-add-line"></i>
+            <span>Nouveau Rapport</span>
+        </a>
+    </div>
 @endsection
 
 @section('content')
