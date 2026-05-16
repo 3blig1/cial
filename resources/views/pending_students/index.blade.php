@@ -12,7 +12,8 @@
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
-    <table class="w-full">
+    <div class="overflow-x-auto">
+    <table class="w-full min-w-[760px]">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
@@ -30,18 +31,20 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->email }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->language_level }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <form action="{{ route('pending-students.activate', $student) }}" method="POST" class="inline-block">
-                        @csrf
-                        <button type="submit" class="text-green-600 hover:text-green-900">Activer</button>
-                    </form>
-                    <form action="{{ route('pending-students.destroy', $student) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Supprimer cet étudiant ?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
-                    </form>
-                    <a href="{{ route('pending-students.downloadRegistrationForm', ['pendingStudent' => $student->id]) }}" class="inline-block ml-4 text-blue-600 hover:text-blue-900" title="Télécharger la fiche d'inscription">
-                        <i class="ri-download-2-line"></i> 
-                    </a>
+                    <div class="flex flex-wrap justify-end gap-3">
+                        <form action="{{ route('pending-students.activate', $student) }}" method="POST" class="inline-block">
+                            @csrf
+                            <button type="submit" class="text-green-600 hover:text-green-900">Activer</button>
+                        </form>
+                        <form action="{{ route('pending-students.destroy', $student) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet étudiant ?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                        </form>
+                        <a href="{{ route('pending-students.downloadRegistrationForm', ['pendingStudent' => $student->id]) }}" class="inline-block text-blue-600 hover:text-blue-900" title="Télécharger la fiche d'inscription">
+                            <i class="ri-download-2-line"></i>
+                        </a>
+                    </div>
                 </td>
             </tr>
             @empty
@@ -53,5 +56,6 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 @endsection
