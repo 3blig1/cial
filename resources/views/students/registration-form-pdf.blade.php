@@ -130,7 +130,7 @@
         <div class="school-info">
             <strong>CIAL - Centre Interculturel Allemand</strong><br>
             Komah, non loin de Nagode transfert, Togo<br>
-            Tél : (+228) 90 49 84 87 | Email : info@cial-de.com
+            Tél : (+228) 90 33 32 32 | Email : info@cial-de.com
         </div>
     </div>
 
@@ -149,10 +149,10 @@
                     </td>
                     <td class="footer-right">
                         <strong>Nom du Compte : </strong> YOROU MOUSTAKILOU <br>
-                        <strong>Numero de Compte : </strong> 0862 4950 0101 32 <br>
+                        <strong>Numero de Compte Orabank : </strong> 0862 4950 0101 32 <br>
                         <strong>RCCM :</strong> TG-SOK-01-2025-B13-00001 <br>  
                         <strong>NIF :</strong> 1001994527<br>
-                        <strong>Web :</strong> cial-de.com | <strong>Tél. :</strong> (+228) 90 49 84 87
+                        <strong>Web :</strong> cial-de.com | <strong>Tél. :</strong> (+228) 90 33 32 32
                     </td>
                 </tr>
             </tbody>
