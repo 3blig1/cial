@@ -6,10 +6,46 @@ use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function create()
+    {
+        $roles = ['admin', 'secretary', 'teacher', 'student'];
+        $schools = School::where('is_active', true)->orderBy('name')->get();
+
+        return view('users.create', compact('roles', 'schools'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', Rule::in(['admin', 'secretary', 'teacher', 'student'])],
+            'school_ids' => ['nullable', 'array', 'required_if:role,secretary,teacher,student', 'min:1'],
+            'school_ids.*' => ['integer', 'exists:schools,id'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+        ]);
+
+        if ($validated['role'] === 'admin') {
+            $user->schools()->detach();
+        } elseif (! empty($validated['school_ids'])) {
+            $user->schools()->sync($validated['school_ids']);
+        }
+
+        return redirect()->route('users.index')->with('success', 'L\'utilisateur a été créé avec succès.');
+    }
+
     public function index(Request $request)
     {
         $query = User::query()

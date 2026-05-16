@@ -4,7 +4,11 @@
 
 @section('header-content')
     <h1 class="text-2xl font-bold text-gray-900">Gestion des utilisateurs</h1>
-    <div class="ml-auto">
+    <div class="ml-auto flex items-center gap-3">
+        <a href="{{ route('users.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 inline-flex items-center gap-2">
+            <i class="ri-add-line"></i>
+            <span>Créer un utilisateur</span>
+        </a>
         <form action="{{ route('users.index') }}" method="GET" class="flex items-center">
             <input type="text" name="search" placeholder="Rechercher par nom ou email..."
                    class="w-64 px-4 py-2 border border-gray-300 rounded-l-button focus:outline-none focus:ring-2 focus:ring-primary"

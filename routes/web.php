@@ -108,6 +108,8 @@ Route::middleware(['auth', 'school.context'])->group(function () {
             Route::resource('subjects', SubjectController::class);
             Route::resource('schools', SchoolController::class)->except('show');
             
+            Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+            Route::post('/users', [UserController::class, 'store'])->name('users.store');
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
             Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.updateRole');
             Route::patch('/users/{user}/schools', [UserController::class, 'updateSchools'])->name('users.updateSchools');
