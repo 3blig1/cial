@@ -5,16 +5,16 @@
 @section('header-content')
 
         <h1 class="text-xl font-semibold text-gray-800">Gestion des Enseignants</h1>
-        <div class="flex items-center gap-4">
-            <form method="GET" action="{{ route('teachers.index') }}">
-                <div class="relative">
+        <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+            <form method="GET" action="{{ route('teachers.index') }}" class="w-full sm:w-auto">
+                <div class="relative w-full sm:w-80">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <i class="ri-search-line text-gray-400"></i>
                     </div>
-                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Rechercher un enseignant..." class="pl-10 pr-4 py-2 w-80 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm">
+                    <input type="search" name="search" value="{{ request('search') }}" placeholder="Rechercher un enseignant..." class="pl-10 pr-4 py-2 w-full rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm">
                 </div>
             </form>
-            <a href="{{ route('teachers.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2">
+            <a href="{{ route('teachers.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center justify-center gap-2">
                 <i class="ri-add-line"></i>
                 <span>Ajouter un enseignant</span>
             </a>
@@ -30,7 +30,8 @@
 @endif
 
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-    <table class="w-full">
+    <div class="overflow-x-auto">
+    <table class="w-full min-w-[760px]">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
@@ -76,6 +77,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 
 <div class="mt-6">

@@ -4,21 +4,21 @@
 
 @section('header-content')
     <h1 class="text-2xl font-bold text-gray-900">Gestion des écoles</h1>
-    <div class="ml-auto flex items-center gap-3">
-        <form action="{{ route('schools.index') }}" method="GET" class="flex items-center">
+    <div class="ml-auto flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+        <form action="{{ route('schools.index') }}" method="GET" class="flex w-full items-center sm:w-auto">
             <input
                 type="text"
                 name="search"
                 placeholder="Rechercher une école..."
                 value="{{ request('search') }}"
-                class="w-64 px-4 py-2 border border-gray-300 rounded-l-button focus:outline-none focus:ring-2 focus:ring-primary"
+                class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-l-button focus:outline-none focus:ring-2 focus:ring-primary"
             >
             <button type="submit" class="px-4 py-2 bg-primary text-white rounded-r-button hover:bg-primary/90">
                 <i class="ri-search-line"></i>
             </button>
         </form>
 
-        <a href="{{ route('schools.create') }}" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+        <a href="{{ route('schools.create') }}" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 text-center">
             Nouvelle école
         </a>
     </div>
@@ -37,7 +37,8 @@
 @endif
 
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-    <table class="w-full">
+    <div class="overflow-x-auto">
+    <table class="w-full min-w-[720px]">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
@@ -74,6 +75,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 
 <div class="mt-6">

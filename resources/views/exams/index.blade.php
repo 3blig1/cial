@@ -4,10 +4,10 @@
 
 @section('content')
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-    <div class="flex items-center justify-between px-6 py-4 border-b">
+    <div class="flex flex-col gap-4 px-4 py-4 border-b sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <h1 class="text-xl font-semibold text-gray-800">Gestion des Examens</h1>
-        <div class="flex items-center gap-4">
-            <form method="GET" action="{{ route('exams.index') }}">
+        <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+            <form method="GET" action="{{ route('exams.index') }}" class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
                 <div class="relative">
                     <select name="subject_id" class="pl-3 pr-4 py-2 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm">
                         <option value="">Toutes les matières</option>
@@ -16,11 +16,11 @@
                         @endforeach
                     </select>
                 </div>
-                <input type="date" name="date_start" value="{{ request('date_start') }}" class="pl-3 pr-4 py-2 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm ml-2">
-                <input type="date" name="date_end" value="{{ request('date_end') }}" class="pl-3 pr-4 py-2 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm ml-2">
-                <button type="submit" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 ml-2">Filtrer</button>
+                <input type="date" name="date_start" value="{{ request('date_start') }}" class="pl-3 pr-4 py-2 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm">
+                <input type="date" name="date_end" value="{{ request('date_end') }}" class="pl-3 pr-4 py-2 rounded-lg border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary/20 text-sm">
+                <button type="submit" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90">Filtrer</button>
             </form>
-            <a href="{{ route('exams.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2">
+            <a href="{{ route('exams.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center justify-center gap-2">
                 <i class="ri-add-line"></i>
                 <span>Ajouter un examen</span>
             </a>
@@ -31,7 +31,8 @@
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
-    <table class="w-full">
+    <div class="overflow-x-auto">
+    <table class="w-full min-w-[760px]">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
@@ -65,5 +66,6 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 @endsection

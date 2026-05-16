@@ -12,7 +12,8 @@
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
-    <table class="w-full">
+    <div class="overflow-x-auto">
+    <table class="w-full min-w-[640px]">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
@@ -48,5 +49,6 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 @endsection

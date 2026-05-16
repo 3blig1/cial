@@ -4,14 +4,15 @@
 
 @section('content')
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-    <div class="flex items-center justify-between px-6 py-4 border-b">
+    <div class="flex flex-col gap-3 px-4 py-4 border-b sm:px-6 sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-xl font-semibold text-gray-800">Gestion des Matières</h1>
-        <a href="{{ route('subjects.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2">
+        <a href="{{ route('subjects.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center justify-center gap-2">
             <i class="ri-add-line"></i>
             <span>Ajouter une matière</span>
         </a>
     </div>
-    <table class="w-full">
+    <div class="overflow-x-auto">
+    <table class="w-full min-w-[520px]">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
@@ -40,5 +41,6 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 @endsection
