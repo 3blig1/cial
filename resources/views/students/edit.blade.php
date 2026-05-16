@@ -49,7 +49,7 @@
             <p class="mt-2 text-sm text-gray-500">Photo de profil</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
                 <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
                 <input type="text" name="last_name" id="last_name" value="{{ old('last_name', $student->last_name) }}" class="w-full px-3 py-2 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary/20" required>
@@ -70,7 +70,7 @@
 
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-3">Niveau de langue</label>
-            <div class="flex items-center gap-8">
+            <div class="flex flex-wrap items-center gap-4 sm:gap-8">
                 @foreach(['A1', 'A2', 'B1', 'B2', 'C1'] as $level)
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" name="language_level" value="{{ $level }}" @if(old('language_level', $student->language_level) == $level) checked @endif>
@@ -84,7 +84,7 @@
 
     <div class="bg-white rounded-lg shadow-sm p-6 space-y-6">
         <h2 class="text-lg font-medium">Contact d'urgence</h2>
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
                 <label for="emergency_contact_name" class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
                 <input type="text" name="emergency_contact_name" id="emergency_contact_name" value="{{ old('emergency_contact_name', $student->emergency_contact_name) }}" class="w-full px-3 py-2 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary/20">

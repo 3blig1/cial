@@ -25,7 +25,7 @@
     </div>
 @endif
 
-<form action="{{ route('courses.update', $course) }}" method="POST" class="space-y-8">
+<form action="{{ route('courses.update', $course) }}" method="POST" class="mx-auto max-w-5xl space-y-8">
     @csrf
     @method('PUT')
     <div class="bg-white rounded-lg shadow-sm p-6 space-y-6">

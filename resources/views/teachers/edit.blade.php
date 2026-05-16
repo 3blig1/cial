@@ -26,12 +26,12 @@
     </div>
 @endif
 
-<form action="{{ route('teachers.update', $teacher) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+<form action="{{ route('teachers.update', $teacher) }}" method="POST" enctype="multipart/form-data" class="mx-auto max-w-5xl space-y-8">
     @csrf
     @method('PUT')
 
     <div class="bg-white rounded-lg shadow-sm p-6 space-y-6">
-        <div class="flex items-center gap-6">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
             <div class="flex-shrink-0">
                 <img class="h-24 w-24 rounded-full object-cover" src="{{ $teacher->profile_photo_path ? asset('storage/' . $teacher->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode($teacher->first_name . ' ' . $teacher->last_name) . '&color=7F9CF5&background=EBF4FF' }}" alt="Photo de {{ $teacher->first_name }} {{ $teacher->last_name }}">
             </div>
