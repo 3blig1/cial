@@ -164,9 +164,18 @@
                                 @endif
                                 <i class="ri-arrow-down-s-line"></i>
                             </button>
-                            <div x-show="open" @click.away="open = true" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10" style="display: none;" x-transition>
-                                <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"></a>
-                                
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-10 overflow-hidden" style="display: none;" x-transition>
+                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="ri-user-line text-gray-500"></i>
+                                    <span>Mon profil</span>
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 text-left">
+                                        <i class="ri-logout-box-r-line"></i>
+                                        <span>Déconnexion</span>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
