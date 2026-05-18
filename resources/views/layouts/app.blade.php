@@ -86,6 +86,8 @@
                      <a href="{{ route('pending-students.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('pending-students.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-time-line w-5 h-5 mr-3"></i><span>Liste d'attente</span>
                     </a>   
+                @endif
+                @if(auth()->user()->hasAnyRole(['admin', 'secretary', 'teacher']))
                     <a href="{{ route('reports.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('reports.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-file-chart-line w-5 h-5 mr-3"></i><span>Rapports</span>
                     </a>
@@ -97,9 +99,6 @@
                     <a href="{{ route('courses.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('courses.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-book-open-line w-5 h-5 mr-3"></i><span>Cours</span>
                     </a>
-                    <a href="{{ route('exams.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('exams.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <i class="ri-file-list-2-line w-5 h-5 mr-3"></i><span>Exams</span>
-                    </a>
                     <a href="{{ route('subjects.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('subjects.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-book-mark-line w-5 h-5 mr-3"></i><span>Matières</span>
                     </a>
@@ -108,6 +107,11 @@
                     </a>
                     <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('users.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-user-line w-5 h-5 mr-3"></i><span>utilisateurs</span>
+                    </a>
+                @endif
+                @if(auth()->user()->hasAnyRole(['admin', 'teacher']))
+                    <a href="{{ route('exams.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('exams.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-file-list-2-line w-5 h-5 mr-3"></i><span>Exams</span>
                     </a>
                 @endif
                 <a href="{{ route('chat.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('chat.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">

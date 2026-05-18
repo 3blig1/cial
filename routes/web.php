@@ -92,7 +92,10 @@ Route::middleware(['auth', 'school.context'])->group(function () {
             Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
             Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
             Route::get('/students/{student}/registration-form', [StudentController::class, 'downloadRegistrationForm'])->name('students.downloadRegistrationForm');
-            
+        });
+
+        // Routes accessibles par admin, secrétaire et enseignant
+        Route::middleware('role:admin,secretary,teacher')->group(function () {
             Route::get('/reports', [DailyReportController::class, 'index'])->name('reports.index');
             Route::get('/reports/create', [DailyReportController::class, 'create'])->name('reports.create');
             Route::post('/reports', [DailyReportController::class, 'store'])->name('reports.store');
