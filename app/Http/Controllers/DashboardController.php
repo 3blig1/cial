@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\ExamGrade;
 use App\Models\School;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -15,6 +16,40 @@ class DashboardController extends Controller
 {
      public function __invoke(): View
     {
+        if (auth()->check() && auth()->user()->isStudent()) {
+            $student = auth()->user()->student()
+                ->with(['courses.subject', 'school'])
+                ->first();
+
+            if (! $student) {
+                $student = Student::with(['courses.subject', 'school'])
+                    ->where('email', auth()->user()->email)
+                    ->first();
+
+                if ($student && ! $student->user_id) {
+                    $student->update(['user_id' => auth()->id()]);
+                }
+            }
+
+            $studentCourses = $student
+                ? $student->courses->sortByDesc('start_date')->values()
+                : collect();
+
+            $studentGrades = $student
+                ? ExamGrade::with(['exam.subject'])
+                    ->where('student_id', $student->id)
+                    ->latest()
+                    ->take(8)
+                    ->get()
+                : collect();
+
+            return view('dashboard_student', [
+                'student' => $student,
+                'studentCourses' => $studentCourses,
+                'studentGrades' => $studentGrades,
+            ]);
+        }
+
         $isAdmin = auth()->check() && auth()->user()->isAdmin();
         $currentSchoolName = School::whereKey(session('school_id'))->value('name');
 

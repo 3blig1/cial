@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\PendingStudent;
+use App\Models\School;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PendingStudentController extends Controller
 {
@@ -28,7 +31,33 @@ class PendingStudentController extends Controller
     // Active un étudiant (transfert vers students)
     public function activate(PendingStudent $pendingStudent)
     {
-        $student = Student::create($pendingStudent->toArray());
+        $defaultSchool = School::firstOrCreate(
+            ['code' => 'default'],
+            ['name' => 'École Principale', 'is_active' => true]
+        );
+
+        $schoolId = $pendingStudent->school_id ?: $defaultSchool->id;
+
+        $user = User::firstOrCreate(
+            ['email' => $pendingStudent->email],
+            [
+                'name' => trim($pendingStudent->first_name . ' ' . $pendingStudent->last_name),
+                'password' => Hash::make('password'),
+                'role' => 'student',
+            ]
+        );
+
+        if ($user->role !== 'student') {
+            $user->update(['role' => 'student']);
+        }
+
+        $user->schools()->syncWithoutDetaching([$schoolId]);
+
+        $studentData = $pendingStudent->toArray();
+        $studentData['school_id'] = $schoolId;
+        $studentData['user_id'] = $user->id;
+
+        $student = Student::create($studentData);
         $pendingStudent->delete();
         return redirect()->route('pending-students.index')->with('success', 'Étudiant activé avec succès.');
     }

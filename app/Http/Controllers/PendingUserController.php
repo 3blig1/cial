@@ -26,10 +26,14 @@ class PendingUserController extends Controller
 
         $schoolId = $pendingUser->school_id ?: $defaultSchool->id;
 
+        $password = $pendingUser->role === 'student'
+            ? Hash::make('password')
+            : $pendingUser->password;
+
         $user = User::create([
             'name' => $pendingUser->name,
             'email' => $pendingUser->email,
-            'password' => $pendingUser->password,
+            'password' => $password,
             'role' => $pendingUser->role,
         ]);
 

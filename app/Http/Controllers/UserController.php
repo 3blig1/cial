@@ -30,10 +30,14 @@ class UserController extends Controller
             'school_ids.*' => ['integer', 'exists:schools,id'],
         ]);
 
+        $rawPassword = $validated['role'] === 'student'
+            ? 'password'
+            : $validated['password'];
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make($rawPassword),
             'role' => $validated['role'],
         ]);
 
