@@ -100,7 +100,7 @@
                         <i class="ri-book-open-line w-5 h-5 mr-3"></i><span>Cours</span>
                     </a>
                     <a href="{{ route('subjects.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('subjects.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
-                        <i class="ri-book-mark-line w-5 h-5 mr-3"></i><span>Matières</span>
+                        <i class="ri-book-2-line w-5 h-5 mr-3"></i><span>Matières</span>
                     </a>
                     <a href="{{ route('schools.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('schools.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-building-line w-5 h-5 mr-3"></i><span>Écoles</span>
