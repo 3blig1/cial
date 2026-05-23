@@ -12,6 +12,9 @@ class DailyReportController extends Controller
     public function index(Request $request)
     {
         $reports = DailyReport::with('author')
+            ->when(! Auth::user()->isAdmin(), function ($query) {
+                $query->where('user_id', Auth::id());
+            })
             ->when($request->filled('report_date'), function ($query) use ($request) {
                 $query->whereDate('report_date', $request->input('report_date'));
             })
@@ -50,6 +53,10 @@ class DailyReportController extends Controller
 
     public function show(DailyReport $report)
     {
+        if (! (Auth::user()->isAdmin() || Auth::id() === $report->user_id)) {
+            abort(403, "Vous n'avez pas la permission de consulter ce rapport.");
+        }
+
         $report->load('author');
         return view('reports.show', compact('report'));
     }
