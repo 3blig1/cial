@@ -49,7 +49,11 @@ class PendingStudentController extends Controller
             ['name' => 'École Principale', 'is_active' => true]
         );
 
-        $schoolId = $pendingStudent->school_id ?: $defaultSchool->id;
+        $schoolId = $pendingStudent->school_id;
+
+        if (! $schoolId || ! School::whereKey($schoolId)->exists()) {
+            $schoolId = $defaultSchool->id;
+        }
 
         $user = User::firstOrCreate(
             ['email' => $normalizedEmail],
@@ -64,15 +68,15 @@ class PendingStudentController extends Controller
             $user->update(['role' => 'student']);
         }
 
-        $user->schools()->syncWithoutDetaching([$schoolId]);
-
         $studentData = $pendingStudent->toArray();
         $studentData['email'] = $normalizedEmail;
         $studentData['school_id'] = $schoolId;
         $studentData['user_id'] = $user->id;
 
         try {
-            DB::transaction(function () use ($studentData, $pendingStudent): void {
+            DB::transaction(function () use ($studentData, $pendingStudent, $user, $schoolId): void {
+                $user->schools()->syncWithoutDetaching([$schoolId]);
+
                 Student::create($studentData);
 
                 if (! $pendingStudent->delete()) {
@@ -92,6 +96,10 @@ class PendingStudentController extends Controller
 
             if (($exception->errorInfo[1] ?? null) === 1054) {
                 $message = 'Activation impossible: base de donnees non a jour (colonne manquante). Lancez les migrations.';
+            } elseif (($exception->errorInfo[1] ?? null) === 1062) {
+                $message = 'Activation impossible: un eleve avec cet email existe deja.';
+            } elseif (($exception->errorInfo[1] ?? null) === 1452) {
+                $message = 'Activation impossible: reference de donnees invalide (ecole/utilisateur).';
             }
 
             return redirect()
