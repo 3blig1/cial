@@ -34,20 +34,20 @@
 
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
-    <table class="w-full min-w-[840px]">
+    <table class="w-full min-w-[760px]">
         <thead class="bg-gray-50">
             <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Écoles autorisées</th>
-                <th class="w-24 min-w-24 bg-gray-50 px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Écoles autorisées</th>
+                <th class="w-20 min-w-20 bg-gray-50 px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
             @forelse ($users as $user)
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-4 py-3 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10">
                                 <img class="h-10 w-10 rounded-full object-cover" src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&color=7F9CF5&background=EBF4FF" alt="Avatar de {{ $user->name }}">
@@ -62,26 +62,26 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $user->email }}</td>
-                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $user->email }}</td>
+                    <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">
                         <form action="{{ route('users.updateRole', $user) }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <div class="flex items-center gap-2">
-                                <select name="role" class="w-32 px-3 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
+                                <select name="role" class="w-28 px-2 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
                                     @foreach($roles as $role)
                                         <option value="{{ $role }}" @if($user->role === $role) selected @endif>
                                             {{ ucfirst($role) }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <button type="submit" class="px-3 py-1 bg-primary text-white font-medium rounded-button hover:bg-primary/90 text-xs">
+                                <button type="submit" class="px-2.5 py-1 bg-primary text-white font-medium rounded-button hover:bg-primary/90 text-xs">
                                     OK
                                 </button>
                             </div>
                         </form>
                     </td>
-                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">
                         @if($user->isAdmin())
                             <span class="inline-flex items-center px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700">
                                 Toutes les écoles (Admin global)
@@ -91,26 +91,26 @@
                                 @csrf
                                 @method('PATCH')
                                 <div class="flex items-center gap-2">
-                                    <select name="school_ids[]" multiple size="3" class="w-44 px-3 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
+                                    <select name="school_ids[]" multiple size="3" class="w-36 px-2 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" @selected($user->schools->contains('id', $school->id))>
                                                 {{ $school->name }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="px-3 py-1 bg-primary text-white font-medium rounded-button hover:bg-primary/90 text-xs">
+                                    <button type="submit" class="px-2.5 py-1 bg-primary text-white font-medium rounded-button hover:bg-primary/90 text-xs">
                                         OK
                                     </button>
                                 </div>
                             </form>
                         @endif
                     </td>
-                    <td class="w-20 min-w-20 bg-white px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td class="w-20 min-w-20 bg-white px-3 py-3 whitespace-nowrap text-right text-sm font-medium">
                         @if($user->id !== auth()->id() && $user->name !== 'Admin')
                             <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet utilisateur ?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-red-700 hover:bg-red-100" title="Supprimer" aria-label="Supprimer">
+                                <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-2.5 py-1.5 text-red-700 hover:bg-red-100" title="Supprimer" aria-label="Supprimer">
                                     <i class="ri-delete-bin-line"></i>
                                 </button>
                             </form>
