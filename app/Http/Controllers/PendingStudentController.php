@@ -33,7 +33,7 @@ class PendingStudentController extends Controller
     // Active un étudiant (transfert vers students)
     public function activate(PendingStudent $pendingStudent)
     {
-        $normalizedEmail = strtolower(trim($pendingStudent->email));
+        $normalizedEmail = $this->normalizeEmail($pendingStudent->email);
 
         $schoolId = $pendingStudent->school_id;
 
@@ -57,7 +57,7 @@ class PendingStudentController extends Controller
                     return 'already_exists';
                 }
 
-                $user = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+                $user = $this->findUserByEmail($normalizedEmail);
 
                 if (! $user) {
                     try {
@@ -72,7 +72,7 @@ class PendingStudentController extends Controller
                             throw $exception;
                         }
 
-                        $user = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+                        $user = $this->findUserByEmail($normalizedEmail);
 
                         if (! $user) {
                             throw $exception;
@@ -136,7 +136,7 @@ class PendingStudentController extends Controller
                 if (str_contains($errorMessage, 'students_school_id_email_unique')) {
                     $message = 'Activation impossible: un eleve avec cet email existe deja dans cette ecole.';
                 } elseif (str_contains($errorMessage, 'users_email_unique')) {
-                    $existingUser = User::whereRaw('LOWER(TRIM(email)) = ?', [$normalizedEmail])->first();
+                    $existingUser = $this->findUserByEmail($normalizedEmail);
 
                     if ($existingUser) {
                         DB::transaction(function () use ($existingUser, $pendingStudent, $schoolId, $normalizedEmail): void {
@@ -193,6 +193,22 @@ class PendingStudentController extends Controller
                 ->route('pending-students.index')
                 ->with('error', 'Activation impossible pour le moment. Verifiez les donnees puis reessayez.');
         }
+    }
+
+    private function normalizeEmail(?string $email): string
+    {
+        $email = (string) $email;
+        $email = preg_replace('/\s+/u', '', $email) ?? $email;
+
+        return strtolower(trim($email));
+    }
+
+    private function findUserByEmail(string $normalizedEmail): ?User
+    {
+        return User::query()
+            ->where('email', $normalizedEmail)
+            ->orWhereRaw("LOWER(REPLACE(TRIM(email), ' ', '')) = ?", [$normalizedEmail])
+            ->first();
     }
 
     // Supprime un étudiant en attente
