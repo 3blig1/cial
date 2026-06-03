@@ -57,14 +57,28 @@ class PendingStudentController extends Controller
                     return 'already_exists';
                 }
 
-                $user = User::firstOrCreate(
-                    ['email' => $normalizedEmail],
-                    [
-                        'name' => trim($pendingStudent->first_name . ' ' . $pendingStudent->last_name),
-                        'password' => Hash::make('password'),
-                        'role' => 'student',
-                    ]
-                );
+                $user = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+
+                if (! $user) {
+                    try {
+                        $user = User::create([
+                            'name' => trim($pendingStudent->first_name . ' ' . $pendingStudent->last_name),
+                            'email' => $normalizedEmail,
+                            'password' => Hash::make('password'),
+                            'role' => 'student',
+                        ]);
+                    } catch (QueryException $exception) {
+                        if (($exception->errorInfo[1] ?? null) !== 1062) {
+                            throw $exception;
+                        }
+
+                        $user = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+
+                        if (! $user) {
+                            throw $exception;
+                        }
+                    }
+                }
 
                 if ($user->role !== 'student') {
                     $user->update(['role' => 'student']);
