@@ -34,11 +34,11 @@
 
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
-    <table class="w-full min-w-[700px]">
+    <table class="w-full min-w-[700px] table-fixed">
         <thead class="bg-gray-50">
             <tr>
-                <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
-                <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th class="w-[24%] px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                <th class="w-[20%] px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
                 <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Écoles autorisées</th>
                 <th class="px-3 py-2.5 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -54,7 +54,7 @@
                             </div>
                             <div class="ml-3">
                                 <div class="text-sm font-medium text-gray-900 flex items-center gap-2">
-                                    <span>{{ $user->name }}</span>
+                                    <span class="truncate">{{ $user->name }}</span>
                                     @if($user->isAdmin())
                                         <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700">Admin global</span>
                                     @endif
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-3 py-2.5 whitespace-nowrap text-sm text-gray-500">{{ $user->email }}</td>
+                    <td class="px-3 py-2.5 whitespace-nowrap text-sm text-gray-500 truncate">{{ $user->email }}</td>
                     <td class="px-2 py-2.5 whitespace-nowrap text-sm text-gray-500">
                         <form action="{{ route('users.updateRole', $user) }}" method="POST">
                             @csrf
