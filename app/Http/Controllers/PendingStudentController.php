@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -34,9 +35,11 @@ class PendingStudentController extends Controller
     public function activate(PendingStudent $pendingStudent)
     {
         if (Student::where('email', $pendingStudent->email)->exists()) {
+            $pendingStudent->delete();
+
             return redirect()
                 ->route('pending-students.index')
-                ->with('error', 'Activation impossible: cet email existe deja dans les etudiants.');
+                ->with('success', 'Cet etudiant existe deja dans les eleves. Entree en attente supprimee.');
         }
 
         $defaultSchool = School::firstOrCreate(
@@ -66,11 +69,16 @@ class PendingStudentController extends Controller
         $studentData['user_id'] = $user->id;
 
         try {
-            $student = Student::create($studentData);
-            $pendingStudent->delete();
+            DB::transaction(function () use ($studentData, $pendingStudent): void {
+                Student::create($studentData);
+
+                if (! $pendingStudent->delete()) {
+                    throw new \RuntimeException('Suppression pending student echouee.');
+                }
+            });
 
             return redirect()->route('pending-students.index')->with('success', 'Étudiant activé avec succès.');
-        } catch (QueryException $exception) {
+        } catch (\Throwable $exception) {
             Log::warning('Activation etudiant en attente echouee.', [
                 'pending_student_id' => $pendingStudent->id,
                 'email' => $pendingStudent->email,
