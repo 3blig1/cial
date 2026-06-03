@@ -110,8 +110,8 @@
                             <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet utilisateur ?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-red-700 hover:bg-red-100">
-                                    Supprimer
+                                <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-red-700 hover:bg-red-100" title="Supprimer" aria-label="Supprimer">
+                                    <i class="ri-delete-bin-line"></i>
                                 </button>
                             </form>
                         @else
