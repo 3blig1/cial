@@ -105,6 +105,18 @@ class PendingStudentController extends Controller
             if (($exception->errorInfo[1] ?? null) === 1054) {
                 $message = 'Activation impossible: base de donnees non a jour (colonne manquante). Lancez les migrations.';
             } elseif (($exception->errorInfo[1] ?? null) === 1062) {
+                $existingStudent = Student::where('school_id', $schoolId)
+                    ->where('email', $normalizedEmail)
+                    ->first();
+
+                if ($existingStudent) {
+                    $pendingStudent->delete();
+
+                    return redirect()
+                        ->route('pending-students.index')
+                        ->with('success', 'Cet etudiant est deja active dans cette ecole. Entree en attente supprimee.');
+                }
+
                 $message = 'Activation impossible: un eleve avec cet email existe deja dans cette ecole.';
             } elseif (($exception->errorInfo[1] ?? null) === 1452) {
                 $message = 'Activation impossible: reference de donnees invalide (ecole/utilisateur).';
