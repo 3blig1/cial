@@ -116,6 +116,7 @@ Route::middleware(['auth', 'school.context'])->group(function () {
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
             Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.updateRole');
             Route::patch('/users/{user}/schools', [UserController::class, 'updateSchools'])->name('users.updateSchools');
+            Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
             
             Route::delete('/reports/{report}', [DailyReportController::class, 'destroy'])->name('reports.destroy');
             Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');

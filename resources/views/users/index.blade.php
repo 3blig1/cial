@@ -106,7 +106,15 @@
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        {{-- Actions like view profile could be added here --}}
+                        @if($user->id !== auth()->id() && $user->name !== 'Admin')
+                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900">
+                                    Supprimer
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\School;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -107,5 +108,25 @@ class UserController extends Controller
         $user->schools()->sync($validated['school_ids']);
 
         return back()->with('success', 'Les accès école de ' . $user->name . ' ont été mis à jour.');
+    }
+
+    public function destroy(User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+        }
+
+        if ($user->name === 'Admin') {
+            return back()->with('error', 'Le compte Admin principal ne peut pas être supprimé.');
+        }
+
+        try {
+            $userName = $user->name;
+            $user->delete();
+
+            return back()->with('success', 'L\'utilisateur ' . $userName . ' a été supprimé avec succès.');
+        } catch (QueryException $exception) {
+            return back()->with('error', 'Suppression impossible: cet utilisateur est encore lié à des données (examens, salons, messages ou autres éléments).');
+        }
     }
 }
