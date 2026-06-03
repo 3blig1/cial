@@ -75,21 +75,23 @@ class PendingStudentController extends Controller
                         $user = $this->findUserByEmail($normalizedEmail);
 
                         if (! $user) {
-                            throw $exception;
+                            $user = null;
                         }
                     }
                 }
 
-                if ($user->role !== 'student') {
+                if ($user && $user->role !== 'student') {
                     $user->update(['role' => 'student']);
                 }
 
-                $user->schools()->syncWithoutDetaching([$schoolId]);
+                if ($user) {
+                    $user->schools()->syncWithoutDetaching([$schoolId]);
+                }
 
                 $studentData = $pendingStudent->toArray();
                 $studentData['email'] = $normalizedEmail;
                 $studentData['school_id'] = $schoolId;
-                $studentData['user_id'] = $user->id;
+                $studentData['user_id'] = $user?->id;
 
                 Student::create($studentData);
 
