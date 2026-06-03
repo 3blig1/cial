@@ -94,7 +94,6 @@ class StudentController extends Controller
                 'required',
                 'email',
                 Rule::unique('pending_students', 'email'),
-                Rule::unique('students', 'email'),
             ],
             'date_of_birth' => 'required|date',
             'language_level' => 'required|in:A1,A2,B1,B2,C1',
@@ -152,7 +151,13 @@ class StudentController extends Controller
         $validated = $request->validate([
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email,' . $student->id,
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('students', 'email')
+                    ->where(fn ($query) => $query->where('school_id', $student->school_id))
+                    ->ignore($student->id),
+            ],
             'date_of_birth' => 'required|date',
             'language_level' => 'required|in:A1,A2,B1,B2,C1',
             'profile_photo' => 'nullable|image|max:2048', // 2MB Max
@@ -163,6 +168,7 @@ class StudentController extends Controller
         ]);
 
         $studentData = $validated;
+        $studentData['email'] = strtolower(trim($validated['email']));
 
         if ($request->hasFile('profile_photo')) {
             // Supprimer l'ancienne photo si elle existe

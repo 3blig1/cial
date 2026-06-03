@@ -36,14 +36,6 @@ class PendingStudentController extends Controller
     {
         $normalizedEmail = strtolower(trim($pendingStudent->email));
 
-        if (Student::where('email', $normalizedEmail)->exists()) {
-            $pendingStudent->delete();
-
-            return redirect()
-                ->route('pending-students.index')
-                ->with('success', 'Cet etudiant existe deja dans les eleves. Entree en attente supprimee.');
-        }
-
         $defaultSchool = School::firstOrCreate(
             ['code' => 'default'],
             ['name' => 'École Principale', 'is_active' => true]
@@ -53,6 +45,14 @@ class PendingStudentController extends Controller
 
         if (! $schoolId || ! School::whereKey($schoolId)->exists()) {
             $schoolId = $defaultSchool->id;
+        }
+
+        if (Student::where('school_id', $schoolId)->where('email', $normalizedEmail)->exists()) {
+            $pendingStudent->delete();
+
+            return redirect()
+                ->route('pending-students.index')
+                ->with('success', 'Cet etudiant existe deja dans cette ecole. Entree en attente supprimee.');
         }
 
         $user = User::firstOrCreate(
@@ -97,7 +97,7 @@ class PendingStudentController extends Controller
             if (($exception->errorInfo[1] ?? null) === 1054) {
                 $message = 'Activation impossible: base de donnees non a jour (colonne manquante). Lancez les migrations.';
             } elseif (($exception->errorInfo[1] ?? null) === 1062) {
-                $message = 'Activation impossible: un eleve avec cet email existe deja.';
+                $message = 'Activation impossible: un eleve avec cet email existe deja dans cette ecole.';
             } elseif (($exception->errorInfo[1] ?? null) === 1452) {
                 $message = 'Activation impossible: reference de donnees invalide (ecole/utilisateur).';
             }
