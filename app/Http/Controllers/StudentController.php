@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\PendingStudent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 
 class StudentController extends Controller
@@ -89,7 +90,12 @@ class StudentController extends Controller
         $validated = $request->validate([
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:pending_students,email',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('pending_students', 'email'),
+                Rule::unique('students', 'email'),
+            ],
             'date_of_birth' => 'required|date',
             'language_level' => 'required|in:A1,A2,B1,B2,C1',
             'profile_photo' => 'nullable|image|max:2048', // 2MB Max
@@ -99,10 +105,12 @@ class StudentController extends Controller
             'emergency_contact_email' => 'nullable|email|max:255',
         ]);
 
+        $normalizedEmail = strtolower(trim($validated['email']));
+
         $studentData = [
             'last_name' => $validated['last_name'],
             'first_name' => $validated['first_name'],
-            'email' => $validated['email'],
+            'email' => $normalizedEmail,
             'date_of_birth' => $validated['date_of_birth'],
             'language_level' => $validated['language_level'],
             'emergency_contact_name' => $validated['emergency_contact_name'] ?? null,

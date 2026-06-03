@@ -34,7 +34,9 @@ class PendingStudentController extends Controller
     // Active un étudiant (transfert vers students)
     public function activate(PendingStudent $pendingStudent)
     {
-        if (Student::where('email', $pendingStudent->email)->exists()) {
+        $normalizedEmail = strtolower(trim($pendingStudent->email));
+
+        if (Student::where('email', $normalizedEmail)->exists()) {
             $pendingStudent->delete();
 
             return redirect()
@@ -50,7 +52,7 @@ class PendingStudentController extends Controller
         $schoolId = $pendingStudent->school_id ?: $defaultSchool->id;
 
         $user = User::firstOrCreate(
-            ['email' => $pendingStudent->email],
+            ['email' => $normalizedEmail],
             [
                 'name' => trim($pendingStudent->first_name . ' ' . $pendingStudent->last_name),
                 'password' => Hash::make('password'),
@@ -65,6 +67,7 @@ class PendingStudentController extends Controller
         $user->schools()->syncWithoutDetaching([$schoolId]);
 
         $studentData = $pendingStudent->toArray();
+        $studentData['email'] = $normalizedEmail;
         $studentData['school_id'] = $schoolId;
         $studentData['user_id'] = $user->id;
 
@@ -78,6 +81,22 @@ class PendingStudentController extends Controller
             });
 
             return redirect()->route('pending-students.index')->with('success', 'Étudiant activé avec succès.');
+        } catch (QueryException $exception) {
+            Log::warning('Activation etudiant en attente echouee.', [
+                'pending_student_id' => $pendingStudent->id,
+                'email' => $pendingStudent->email,
+                'error' => $exception->getMessage(),
+            ]);
+
+            $message = 'Activation impossible pour le moment. Verifiez les donnees puis reessayez.';
+
+            if (($exception->errorInfo[1] ?? null) === 1054) {
+                $message = 'Activation impossible: base de donnees non a jour (colonne manquante). Lancez les migrations.';
+            }
+
+            return redirect()
+                ->route('pending-students.index')
+                ->with('error', $message);
         } catch (\Throwable $exception) {
             Log::warning('Activation etudiant en attente echouee.', [
                 'pending_student_id' => $pendingStudent->id,
