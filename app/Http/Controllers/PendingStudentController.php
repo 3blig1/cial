@@ -136,6 +136,39 @@ class PendingStudentController extends Controller
                 if (str_contains($errorMessage, 'students_school_id_email_unique')) {
                     $message = 'Activation impossible: un eleve avec cet email existe deja dans cette ecole.';
                 } elseif (str_contains($errorMessage, 'users_email_unique')) {
+                    $existingUser = User::whereRaw('LOWER(TRIM(email)) = ?', [$normalizedEmail])->first();
+
+                    if ($existingUser) {
+                        DB::transaction(function () use ($existingUser, $pendingStudent, $schoolId, $normalizedEmail): void {
+                            if ($existingUser->role !== 'student') {
+                                $existingUser->update(['role' => 'student']);
+                            }
+
+                            $existingUser->schools()->syncWithoutDetaching([$schoolId]);
+
+                            $existingStudent = Student::where('school_id', $schoolId)
+                                ->where('email', $normalizedEmail)
+                                ->first();
+
+                            if (! $existingStudent) {
+                                $studentData = $pendingStudent->toArray();
+                                $studentData['email'] = $normalizedEmail;
+                                $studentData['school_id'] = $schoolId;
+                                $studentData['user_id'] = $existingUser->id;
+
+                                Student::create($studentData);
+                            }
+
+                            if (! $pendingStudent->delete()) {
+                                throw new \RuntimeException('Suppression pending student echouee.');
+                            }
+                        });
+
+                        return redirect()
+                            ->route('pending-students.index')
+                            ->with('success', 'Etudiant active avec le compte utilisateur existant.');
+                    }
+
                     $message = 'Activation impossible: un compte utilisateur avec cet email existe deja.';
                 } elseif (str_contains($errorMessage, 'school_user_school_id_user_id_unique')) {
                     $message = 'Activation impossible: cet utilisateur est deja rattache a cette ecole.';
