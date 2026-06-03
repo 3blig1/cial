@@ -117,7 +117,17 @@ class PendingStudentController extends Controller
                         ->with('success', 'Cet etudiant est deja active dans cette ecole. Entree en attente supprimee.');
                 }
 
-                $message = 'Activation impossible: un eleve avec cet email existe deja dans cette ecole.';
+                $errorMessage = $exception->getMessage();
+
+                if (str_contains($errorMessage, 'students_school_id_email_unique')) {
+                    $message = 'Activation impossible: un eleve avec cet email existe deja dans cette ecole.';
+                } elseif (str_contains($errorMessage, 'users_email_unique')) {
+                    $message = 'Activation impossible: un compte utilisateur avec cet email existe deja.';
+                } elseif (str_contains($errorMessage, 'school_user_school_id_user_id_unique')) {
+                    $message = 'Activation impossible: cet utilisateur est deja rattache a cette ecole.';
+                } else {
+                    $message = 'Activation impossible: un doublon a ete detecte pendant l\'activation.';
+                }
             } elseif (($exception->errorInfo[1] ?? null) === 1452) {
                 $message = 'Activation impossible: reference de donnees invalide (ecole/utilisateur).';
             }
