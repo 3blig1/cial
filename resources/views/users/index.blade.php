@@ -41,7 +41,7 @@
                 <th class="w-[20%] px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
                 <th class="px-3 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Écoles autorisées</th>
-                <th class="px-3 py-2.5 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th class="w-14 px-2 py-2.5 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -105,7 +105,7 @@
                             </form>
                         @endif
                     </td>
-                    <td class=" px-2 py-2.5 whitespace-nowrap text-right text-sm font-medium">
+                    <td class="w-14 px-1.5 py-2.5 whitespace-nowrap text-right text-sm font-medium">
                         @if($user->id !== auth()->id() && $user->name !== 'Admin')
                             <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet utilisateur ?');">
                                 @csrf
