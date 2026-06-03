@@ -7,7 +7,6 @@ use App\Models\School;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -36,53 +35,62 @@ class PendingStudentController extends Controller
     {
         $normalizedEmail = strtolower(trim($pendingStudent->email));
 
-        $defaultSchool = School::firstOrCreate(
-            ['code' => 'default'],
-            ['name' => 'École Principale', 'is_active' => true]
-        );
-
         $schoolId = $pendingStudent->school_id;
 
         if (! $schoolId || ! School::whereKey($schoolId)->exists()) {
-            $schoolId = $defaultSchool->id;
-        }
-
-        if (Student::where('school_id', $schoolId)->where('email', $normalizedEmail)->exists()) {
-            $pendingStudent->delete();
-
             return redirect()
                 ->route('pending-students.index')
-                ->with('success', 'Cet etudiant existe deja dans cette ecole. Entree en attente supprimee.');
+                ->with('error', 'Activation impossible: aucune ecole valide n\'est definie pour cet etudiant en attente.');
         }
-
-        $user = User::firstOrCreate(
-            ['email' => $normalizedEmail],
-            [
-                'name' => trim($pendingStudent->first_name . ' ' . $pendingStudent->last_name),
-                'password' => Hash::make('password'),
-                'role' => 'student',
-            ]
-        );
-
-        if ($user->role !== 'student') {
-            $user->update(['role' => 'student']);
-        }
-
-        $studentData = $pendingStudent->toArray();
-        $studentData['email'] = $normalizedEmail;
-        $studentData['school_id'] = $schoolId;
-        $studentData['user_id'] = $user->id;
 
         try {
-            DB::transaction(function () use ($studentData, $pendingStudent, $user, $schoolId): void {
+            $result = DB::transaction(function () use ($pendingStudent, $schoolId, $normalizedEmail): string {
+                $existingStudent = Student::where('school_id', $schoolId)
+                    ->where('email', $normalizedEmail)
+                    ->first();
+
+                if ($existingStudent) {
+                    if (! $pendingStudent->delete()) {
+                        throw new \RuntimeException('Suppression pending student echouee.');
+                    }
+
+                    return 'already_exists';
+                }
+
+                $user = User::firstOrCreate(
+                    ['email' => $normalizedEmail],
+                    [
+                        'name' => trim($pendingStudent->first_name . ' ' . $pendingStudent->last_name),
+                        'password' => Hash::make('password'),
+                        'role' => 'student',
+                    ]
+                );
+
+                if ($user->role !== 'student') {
+                    $user->update(['role' => 'student']);
+                }
+
                 $user->schools()->syncWithoutDetaching([$schoolId]);
+
+                $studentData = $pendingStudent->toArray();
+                $studentData['email'] = $normalizedEmail;
+                $studentData['school_id'] = $schoolId;
+                $studentData['user_id'] = $user->id;
 
                 Student::create($studentData);
 
                 if (! $pendingStudent->delete()) {
                     throw new \RuntimeException('Suppression pending student echouee.');
                 }
+
+                return 'created';
             });
+
+            if ($result === 'already_exists') {
+                return redirect()
+                    ->route('pending-students.index')
+                    ->with('success', 'Cet etudiant existe deja dans cette ecole. Entree en attente supprimee.');
+            }
 
             return redirect()->route('pending-students.index')->with('success', 'Étudiant activé avec succès.');
         } catch (QueryException $exception) {
