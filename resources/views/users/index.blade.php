@@ -34,7 +34,7 @@
 
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
-    <table class="w-full min-w-[980px]">
+    <table class="w-full min-w-[840px]">
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
@@ -63,12 +63,12 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $user->email }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                         <form action="{{ route('users.updateRole', $user) }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <div class="flex items-center gap-2">
-                                <select name="role" class="w-full px-3 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
+                                <select name="role" class="w-32 px-3 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
                                     @foreach($roles as $role)
                                         <option value="{{ $role }}" @if($user->role === $role) selected @endif>
                                             {{ ucfirst($role) }}
@@ -81,7 +81,7 @@
                             </div>
                         </form>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                         @if($user->isAdmin())
                             <span class="inline-flex items-center px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700">
                                 Toutes les écoles (Admin global)
@@ -91,7 +91,7 @@
                                 @csrf
                                 @method('PATCH')
                                 <div class="flex items-center gap-2">
-                                    <select name="school_ids[]" multiple size="3" class="w-full px-3 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
+                                    <select name="school_ids[]" multiple size="3" class="w-44 px-3 py-1 border-gray-300 bg-gray-50 rounded-md text-sm focus:ring-primary/20 focus:border-primary/20">
                                         @foreach($schools as $school)
                                             <option value="{{ $school->id }}" @selected($user->schools->contains('id', $school->id))>
                                                 {{ $school->name }}
@@ -105,7 +105,7 @@
                             </form>
                         @endif
                     </td>
-                    <td class="w-24 min-w-24 bg-white px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td class="w-20 min-w-20 bg-white px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                         @if($user->id !== auth()->id() && $user->name !== 'Admin')
                             <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cet utilisateur ?');">
                                 @csrf
