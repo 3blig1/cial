@@ -16,7 +16,6 @@
             <a href="mailto:gf@cial-de.com" class="small mr-3"><span class="icon-envelope-o mr-2"></span> gf@cial-de.com</a> 
           </div>
           <div class="col-lg-3 text-right">
-            <a href="{{ route('login') }}" class="small mr-3"><span class="icon-unlock-alt"></span> Connexion</a>
             <a href="{{ route('examens-osd') }}" class="small btn btn-primary px-4 py-2 rounded-0"><span class="icon-check"></span> Examens ÖSD</a>
           </div>
         </div>
