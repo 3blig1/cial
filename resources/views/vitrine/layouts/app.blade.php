@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>@yield('title', 'CIAL Centre Interculturel Allemand')</title>
+    <meta name="description" content="@yield('meta_description', 'Centre Interculturel Allemand (CIAL), centre de formation en langue allemande et centre d\'examen ÖSD accrédité à Sokodé, Togo.')">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo/Logo_icone.png') }}?v=2">
     <link rel="shortcut icon" href="{{ asset('logo/Logo_icone.png') }}?v=2">
     <link rel="apple-touch-icon" href="{{ asset('logo/Logo_icone.png') }}?v=2">

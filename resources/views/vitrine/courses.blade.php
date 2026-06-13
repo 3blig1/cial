@@ -1,103 +1,125 @@
-
 @extends('vitrine.layouts.app')
 
+@section('title', 'Cours d\'allemand A1 à C1 | CIAL Togo')
+@section('meta_description', 'Des cours d\'allemand pour tous les niveaux à Sokodé et Kara. Formez-vous avec des enseignants qualifiés et préparez votre certification ÖSD.')
+
 @section('content')
-   
     @include('vitrine.layouts.header')
 
     <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/bg_1.jpg') }}')">
         <div class="container">
-          <div class="row align-items-end">
-            <div class="col-lg-7">
-              <h2 class="mb-0">Courses</h2>
-              <p>Découvrez nos cours d'allemand adaptés à tous les niveaux.</p>
+            <div class="row align-items-end">
+                <div class="col-lg-7">
+                    <h2 class="mb-0">Cours</h2>
+                    <p>Des parcours clairs du niveau A1 au C1 avec objectif de certification.</p>
+                </div>
             </div>
-          </div>
         </div>
-      </div> 
+    </div>
+
     <div class="custom-breadcrumns border-bottom">
-      <div class="container">
-        <a href="{{ route('home') }}">Home</a>
-        <span class="mx-3 icon-keyboard_arrow_right"></span>
-        <span class="current">Courses</span>
-      </div>
+        <div class="container">
+            <a href="{{ route('home') }}">Accueil</a>
+            <span class="mx-3 icon-keyboard_arrow_right"></span>
+            <span class="current">Cours</span>
+        </div>
     </div>
 
     <div class="site-section">
         <div class="container">
+            @php
+                $courses = [
+                    [
+                        'level' => 'A1',
+                        'title' => 'Allemand niveau A1',
+                        'description' => 'Bases : se présenter, expressions courantes.',
+                        'duration' => '~60h',
+                        'exam' => 'ÖSD Zertifikat Deutsch A1',
+                        'image' => 'course_1.jpg',
+                    ],
+                    [
+                        'level' => 'A2',
+                        'title' => 'Allemand niveau A2',
+                        'description' => 'Communication dans des situations familières.',
+                        'duration' => '~80h',
+                        'exam' => 'ÖSD Zertifikat Deutsch A2',
+                        'image' => 'course_2.jpg',
+                    ],
+                    [
+                        'level' => 'B1',
+                        'title' => 'Allemand niveau B1',
+                        'description' => 'Autonomie à l\'oral et à l\'écrit, opinions.',
+                        'duration' => '~100h',
+                        'exam' => 'ÖSD Zertifikat Deutsch B1',
+                        'image' => 'course_3.jpg',
+                    ],
+                    [
+                        'level' => 'B2',
+                        'title' => 'Allemand niveau B2',
+                        'description' => 'Structures complexes, aisance.',
+                        'duration' => '~120h',
+                        'exam' => 'ÖSD Zertifikat Deutsch B2',
+                        'image' => 'course_4.jpg',
+                    ],
+                    [
+                        'level' => 'C1',
+                        'title' => 'Allemand niveau C1',
+                        'description' => 'Expression fluide, textes exigeants.',
+                        'duration' => '~140h',
+                        'exam' => 'ÖSD Zertifikat Deutsch C1',
+                        'image' => 'course_5.jpg',
+                    ],
+                    [
+                        'level' => 'Prépa examens',
+                        'title' => 'Préparation intensive ÖSD',
+                        'description' => 'Entraînement intensif aux épreuves ÖSD.',
+                        'duration' => '~40h',
+                        'exam' => 'Tous niveaux ÖSD',
+                        'image' => 'course_6.jpg',
+                    ],
+                ];
+            @endphp
+
             <div class="row">
-                @for ($i = 1; $i <= 6; $i++)
-
-                 @php
-                 $category = $i == 1 ? 'Niveau A1' : ($i == 2 ? 'Niveau A2' : ($i == 3 ? 'Niveau B1' : ($i == 4 ? 'Niveau B2' : ($i == 5 ? 'Niveau C1' : 'Cours Preparatifs aux examens'))));
-                 @endphp
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="course-1-item">
-                        <figure class="thumnail">
-                        <a href="#"><img src="{{ asset('vendors/images/course_' . $i . '.jpg') }}" alt="Image" class="img-fluid"></a>
-
-                        <div class="category"><h3>{{ $category }}</h3></div>
-                        </figure>
-                        <div class="course-1-content pb-4">
-                        <h2>
-                            @switch($i)
-                                @case(1)
-                                    Allemand Niveau A1
-                                    @break
-                                @case(2)
-                                    Allemand Niveau A2
-                                    @break
-                                @case(3)
-                                    Allemand Niveau B1
-                                    @break
-                                @case(4)
-                                    Allemand Niveau B2
-                                    @break
-                                @case(5)
-                                    Allemand Niveau C1
-                                    @break
-                                @case(6)
-                                    Cours préparatifs aux examens
-                                    @break
-                            @endswitch
-                        </h2>
-                        <div class="rating text-center mb-3">
-                            @for ($star = 1; $star <= $i; $star++)
-                                <span class="icon-star2 text-warning"></span>
-                            @endfor
-                        </div>
-                        <p class="desc mb-4">
-                            @switch($i)
-                                @case(1)
-                                    Ce niveau s'adresse aux débutants et permet d'acquérir les bases de la langue allemande : se présenter, comprendre et utiliser des expressions courantes.
-                                    @break
-                                @case(2)
-                                    Approfondissement des connaissances de base, compréhension de phrases simples et capacité à communiquer dans des situations familières.
-                                    @break
-                                @case(3)
-                                    Développement de l'autonomie à l'oral et à l'écrit, compréhension de textes simples et capacité à exprimer des opinions sur des sujets familiers.
-                                    @break
-                                @case(4)
-                                    Maîtrise des structures complexes, compréhension de textes variés et capacité à interagir avec aisance dans la plupart des situations.
-                                    @break
-                                @case(5)
-                                    Perfectionnement de la langue, compréhension de textes longs et exigeants, expression claire et structurée sur des sujets complexes.
-                                    @break
-                                @case(6)
-                                    Préparation intensive aux examens officiels (ÖSD, Goethe), entraînement aux épreuves et acquisition des stratégies de réussite.
-                                    @break
-                            @endswitch
-                        </p>
-                        <p><a href="{{ route('contact') }}" class="btn btn-primary rounded-0 px-4">s'inscrire</a></p>
+                @foreach ($courses as $course)
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="course-1-item h-100">
+                            <figure class="thumnail">
+                                <a href="#"><img src="{{ asset('vendors/images/' . $course['image']) }}" alt="{{ $course['title'] }}" class="img-fluid"></a>
+                                <div class="category"><h3>{{ $course['level'] }}</h3></div>
+                            </figure>
+                            <div class="course-1-content pb-4">
+                                <h2>{{ $course['title'] }}</h2>
+                                <p class="desc mb-3">{{ $course['description'] }}</p>
+                                <p class="mb-1"><strong>Durée indicative :</strong> {{ $course['duration'] }}</p>
+                                <p class="mb-4"><strong>Débouché examen :</strong> {{ $course['exam'] }}</p>
+                                <p><a href="{{ route('admissions') }}" class="btn btn-primary rounded-0 px-4">S'inscrire</a></p>
+                            </div>
                         </div>
                     </div>
+                @endforeach
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <p><em>Les durées indiquées sont des estimations. Elles peuvent être ajustées selon les programmes pédagogiques validés par la direction.</em></p>
                 </div>
-                @endfor
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <h2 class="section-title-underline mb-4"><span>Cours d'allemand en ligne</span></h2>
+                    <p>Le CIAL propose également des formations en allemand à distance, adaptées aux professionnels et aux entreprises souhaitant intégrer la langue allemande dans leur activité. Ces cours sont accessibles depuis n'importe où et peuvent être organisés en sessions individuelles ou en groupe.</p>
+                    <ul class="ul-check primary list-unstyled">
+                        <li>Format : visioconférence (Zoom / Google Meet)</li>
+                        <li>Niveaux disponibles : A1 à B2</li>
+                        <li>Programmes sur mesure pour entreprises</li>
+                        <li>Contact : <a href="mailto:gf@cial-de.com">gf@cial-de.com</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-
-   
 
     @include('vitrine.layouts.footer')
 @endsection

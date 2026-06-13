@@ -16,6 +16,7 @@ use App\Http\Controllers\ChatRoomController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SchoolController;
+use App\Models\Exam;
 
 
 
@@ -41,6 +42,24 @@ Route::get('/courses', function () {
 Route::get('/admissions', function () {
     return view('vitrine.admissions');
 })->name('admissions');
+
+Route::get('/examens-osd', function () {
+    $upcomingExams = Exam::query()
+        ->whereDate('exam_date', '>=', today())
+        ->orderBy('exam_date')
+        ->limit(5)
+        ->get();
+
+    return view('vitrine.examens-osd', compact('upcomingExams'));
+})->name('examens-osd');
+
+Route::get('/partenariats', function () {
+    return view('vitrine.partenariats');
+})->name('partenariats');
+
+Route::get('/mentions-legales', function () {
+    return view('vitrine.mentions-legales');
+})->name('mentions-legales');
 
 
 
