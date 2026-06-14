@@ -185,7 +185,7 @@
                         'B2' => '150.000 fr',
                         'C1' => '180.000 fr',
                     ];
-                @endphp
+                @endphp 
 
                 @php
                     $Mois = [

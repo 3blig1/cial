@@ -35,7 +35,7 @@
                         <li class="mb-3"><strong>Adresse antenne :</strong><br>Kara, Quartier Dongoyo, Togo</li>
                         <li class="mb-3"><strong>Téléphone :</strong> <a href="tel:+22890333232">+228 90 33 32 32</a></li>
                         <li class="mb-3"><strong>Email :</strong> <a href="mailto:gf@cial-de.com">gf@cial-de.com</a></li>
-                        <li class="mb-3"><strong>Horaires (proposition) :</strong><br>Lun-Ven : 8h00-18h00 | Sam : 8h00-13h00</li>
+                        <li class="mb-3"><strong>Horaires :</strong><br>Lun-Ven : 7h00-17h00 | Sam : 8h00-13h00</li>
                         <li><strong>Réseaux sociaux :</strong><br>Facebook : <a href="https://www.facebook.com/share/1DKdTrmYaX/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">CIAL Togo</a> | TikTok : <a href="https://www.tiktok.com/@cial.togo" target="_blank" rel="noopener noreferrer">@cial.togo</a></li>
                     </ul>
                 </div>

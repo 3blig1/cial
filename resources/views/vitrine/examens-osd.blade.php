@@ -105,31 +105,31 @@
                                     <td>A1</td>
                                     <td>ÖSD Zertifikat Deutsch A1</td>
                                     <td>Visa familial, migration</td>
-                                    <td>À préciser</td>
+                                    <td><a href="https://examenosd.cial-de.com/exams">Consulter les prix</a></td>
                                 </tr>
                                 <tr>
                                     <td>A2</td>
                                     <td>ÖSD Zertifikat Deutsch A2</td>
                                     <td>Débutants avancés</td>
-                                    <td>À préciser</td>
+                                    <td><a href="https://examenosd.cial-de.com/exams">Consulter les prix</a></td>
                                 </tr>
                                 <tr>
                                     <td>B1</td>
                                     <td>ÖSD Zertifikat Deutsch B1</td>
                                     <td>Études, migration</td>
-                                    <td>À préciser</td>
+                                    <td><a href="https://examenosd.cial-de.com/exams">Consulter les prix</a></td>
                                 </tr>
                                 <tr>
                                     <td>B2</td>
                                     <td>ÖSD Zertifikat Deutsch B2</td>
                                     <td>Professionnels, études sup.</td>
-                                    <td>À préciser</td>
+                                    <td><a href="https://examenosd.cial-de.com/exams">Consulter les prix</a></td>
                                 </tr>
                                 <tr>
                                     <td>C1</td>
                                     <td>ÖSD Zertifikat Deutsch C1</td>
                                     <td>Niveau universitaire</td>
-                                    <td>À préciser</td>
+                                    <td><a href="https://examenosd.cial-de.com/exams">Consulter les prix</a></td>
                                 </tr>
                             </tbody>
                         </table>

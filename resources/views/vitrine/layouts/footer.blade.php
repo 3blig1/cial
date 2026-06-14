@@ -35,6 +35,11 @@
             <li>TikTok : <a href="https://www.tiktok.com/@cial.togo" target="_blank" rel="noopener noreferrer">@cial.togo</a></li>
           </ul>
       </div>
+      <div class="site-logo">
+        <a href="{{ url('/') }}" class="d-block">
+          <img src="{{ asset('vendors/images/ösd/Logo ÖSD_final.png') }}" width="150" alt="Logo CIAL" class="img-fluid">
+        </a>
+      </div>
     </div>
 
     <div class="row">
