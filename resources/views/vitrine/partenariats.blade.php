@@ -6,7 +6,7 @@
 @section('content')
     @include('vitrine.layouts.header')
 
-    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/bg_1.jpg') }}')">
+    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/Proposition d´images/IMAGE2.jpg') }}')">
         <div class="container">
             <div class="row align-items-end">
                 <div class="col-lg-10">
@@ -54,9 +54,14 @@
 
             <div class="row">
                 <div class="col-lg-12">
+                    <div class="d-flex align-items-center flex-wrap mb-4" style="gap: 2rem;">
+                        <a href="https://www.oesd.at" target="_blank" rel="noopener noreferrer" aria-label="ÖSD - Österreichisches Sprachdiplom Deutsch">
+                            <img src="{{ asset('vendors/images/ösd/Logo ÖSD_final.png') }}" alt="Logo ÖSD" style="max-height: 80px; width: auto;">
+                        </a>
+                    </div>
+
                     <h2 class="section-title-underline mb-4"><span>Vous souhaitez collaborer avec le CIAL ?</span></h2>
                     <p>Contactez-nous : <a href="mailto:gf@cial-de.com">gf@cial-de.com</a> | <a href="tel:+22890333232">+228 90 33 32 32</a></p>
-                    <p><em>Ajouter les logos des partenaires officiels (ÖSD, Université de Kara) dès que disponibles.</em></p>
                 </div>
             </div>
         </div>

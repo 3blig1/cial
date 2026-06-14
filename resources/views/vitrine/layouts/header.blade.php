@@ -27,7 +27,7 @@
     <div class="d-flex align-items-center">
       <div class="site-logo">
         <a href="{{ url('/') }}" class="d-block">
-          <img src="{{ asset('logo/Logo_cial.png') }}" width="250" alt="Logo CIAL" class="img-fluid">
+          <img src="{{ asset('logo/Logo_cial.png') }}" width="200" alt="Logo CIAL" class="img-fluid">
         </a>
       </div>
       <div class="mr-auto">
@@ -57,7 +57,7 @@
       <div class="ml-auto">
         <div class="social-wrap">
           <a href="https://www.facebook.com/share/1DKdTrmYaX/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook CIAL"><span class="icon-facebook"></span></a>
-          <a href="https://www.tiktok.com/@cial.togo" target="_blank" rel="noopener noreferrer" aria-label="TikTok CIAL"><span class="icon-twitter"></span></a>
+          <a href="https://www.tiktok.com/@cial.togo" target="_blank" rel="noopener noreferrer" aria-label="TikTok CIAL"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z"/></svg></span></a>
           <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a>
         </div>
       </div>

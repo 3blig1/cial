@@ -7,15 +7,28 @@
     @include('vitrine.layouts.header')
 
     <div class="hero-slide owl-carousel site-blocks-cover">
-        <div class="intro-section" style="background-image: url('{{ asset('vendors/images/hero_1.jpg') }}');">
+        <div class="intro-section" style="background-image: url('{{ asset('vendors/images/Proposition d´images/image etudiants cial.jpg') }}');">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-12 mx-auto text-center" data-aos="fade-up">
                         <h1>Bienvenue au CIAL</h1>
                         <p class="lead text-white mb-4">Une langue. Une culture. Un avenir.</p>
                         <p>
-                            <a href="{{ route('admissions') }}" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
-                            <a href="{{ route('examens-osd') }}" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
+                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
+                            <a href="https://examenosd.cial-de.com/exams" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="intro-section" style="background-image: url('{{ asset('vendors/images/Proposition d´images/image etudiant en allemangne deja.jpeg') }}');">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-12 mx-auto text-center" data-aos="fade-up">
+                        <h1>Parle allemand, saisis ton avenir!</h1>
+                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
+                            <a href="https://examenosd.cial-de.com/exams" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
                         </p>
                     </div>
                 </div>
@@ -70,7 +83,7 @@
         </div>
     </div>
 
-    <div class="section-bg style-1" style="background-image: url('{{ asset('vendors/images/hero_1.jpg') }}');">
+    <div class="section-bg style-1" style="background-image: url('{{ asset('vendors/images/Proposition d´images/IMAGE2.jpg') }}');">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-4">

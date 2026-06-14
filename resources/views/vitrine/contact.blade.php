@@ -6,7 +6,7 @@
 @section('content')
     @include('vitrine.layouts.header')
 
-    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/bg_1.jpg') }}')">
+    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/Proposition d´images/etudiants-homme-et-femme-ayant-des-documents.jpg') }}')">
         <div class="container">
             <div class="row align-items-end">
                 <div class="col-lg-8">
@@ -103,13 +103,7 @@
                 <div class="col-lg-6 mb-4">
                     <h5>Centre de Sokodé</h5>
                     <div class="embed-responsive embed-responsive-16by9">
-                        <iframe
-                            class="embed-responsive-item"
-                            src="https://maps.google.com/maps?q=Sokod%C3%A9%20Komah%201&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11309.811844491614!2d1.1211438333431056!3d8.973325637836904!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10294d57f3872b37%3A0x7367344e3c07cf3e!2sCIAL%20Sokod%C3%A9%20%7C%20Centre%20Interculturel%20Allemand!5e1!3m2!1sfr!2sde!4v1781416556139!5m2!1sfr!2sde" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
@@ -117,11 +111,7 @@
                     <div class="embed-responsive embed-responsive-16by9">
                         <iframe
                             class="embed-responsive-item"
-                            src="https://maps.google.com/maps?q=Kara%20Quartier%20Dongoyo%20Togo&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2822.8742499887135!2d1.1792735731508421!3d9.542983280735609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x102bf5394616b845%3A0xb4dda43d861b5a3!2sCIAL%20Kara%20%7C%20Centre%20Interculturel%20Allemand!5e1!3m2!1sfr!2sde!4v1781416180205!5m2!1sfr!2sde" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>

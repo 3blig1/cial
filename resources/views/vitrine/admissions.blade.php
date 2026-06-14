@@ -6,7 +6,7 @@
 @section('content')
     @include('vitrine.layouts.header')
 
-    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/bg_1.jpg') }}')">
+    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/Proposition d´images/IMAGE2.jpg') }}')">
         <div class="container">
             <div class="row align-items-end">
                 <div class="col-lg-8">
@@ -29,7 +29,7 @@
         <div class="container">
             <div class="row mb-5">
                 <div class="col-lg-6 mb-lg-0 mb-4">
-                    <img src="{{ asset('vendors/images/course_6.jpg') }}" alt="Admissions CIAL" class="img-fluid">
+                    <img src="{{ asset('vendors/images/Proposition d´images/ADMISIION.png') }}" alt="Admissions CIAL" class="img-fluid">
                 </div>
                 <div class="col-lg-5 ml-auto align-self-center">
                     <h2 class="section-title-underline mb-4"><span>Conditions d'admission</span></h2>
@@ -47,7 +47,7 @@
 
             <div class="row">
                 <div class="col-lg-6 order-1 order-lg-2 mb-4 mb-lg-0">
-                    <img src="{{ asset('vendors/images/course_3.jpg') }}" alt="Examens OSD" class="img-fluid">
+                    <img src="{{ asset('vendors/images/Proposition d´images/CERTIFICATION.jpg') }}" alt="Examens OSD" class="img-fluid">
                 </div>
                 <div class="col-lg-5 mr-auto align-self-center order-2 order-lg-1">
                     <h2 class="section-title-underline mb-4"><span>Examens ÖSD</span></h2>

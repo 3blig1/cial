@@ -6,7 +6,7 @@
 @section('content')
     @include('vitrine.layouts.header')
 
-    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/bg_1.jpg') }}')">
+    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/Proposition d´images/IMAGE2.jpg') }}')">
         <div class="container">
             <div class="row align-items-end">
                 <div class="col-lg-8">
@@ -36,7 +36,7 @@
 
             <div class="row mb-5">
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <img src="{{ asset('vendors/images/course_4.jpg') }}" alt="CIAL formation" class="img-fluid">
+                    <img src="{{ asset('vendors/images/Proposition d´images/image etudiant en allemangne deja.jpeg') }}" alt="CIAL formation" class="img-fluid">
                 </div>
                 <div class="col-lg-6">
                     <h2 class="section-title-underline mb-4"><span>Ce que nous proposons</span></h2>

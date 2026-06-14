@@ -6,7 +6,7 @@
 @section('content')
     @include('vitrine.layouts.header')
 
-    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/bg_1.jpg') }}')">
+    <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('{{ asset('vendors/images/Proposition d´images/IMAGE2.jpg') }}')">
         <div class="container">
             <div class="row align-items-end">
                 <div class="col-lg-7">
@@ -35,7 +35,7 @@
                         'description' => 'Bases : se présenter, expressions courantes.',
                         'duration' => '~60h',
                         'exam' => 'ÖSD Zertifikat Deutsch A1',
-                        'image' => 'course_1.jpg',
+                        'image' => 'Proposition d´images/niveau a1.png',
                     ],
                     [
                         'level' => 'A2',
@@ -43,7 +43,7 @@
                         'description' => 'Communication dans des situations familières.',
                         'duration' => '~80h',
                         'exam' => 'ÖSD Zertifikat Deutsch A2',
-                        'image' => 'course_2.jpg',
+                        'image' => 'Proposition d´images/niveau a2.png',
                     ],
                     [
                         'level' => 'B1',
@@ -51,7 +51,7 @@
                         'description' => 'Autonomie à l\'oral et à l\'écrit, opinions.',
                         'duration' => '~100h',
                         'exam' => 'ÖSD Zertifikat Deutsch B1',
-                        'image' => 'course_3.jpg',
+                        'image' => 'Proposition d´images/niveau b1.png',
                     ],
                     [
                         'level' => 'B2',
@@ -59,7 +59,7 @@
                         'description' => 'Structures complexes, aisance.',
                         'duration' => '~120h',
                         'exam' => 'ÖSD Zertifikat Deutsch B2',
-                        'image' => 'course_4.jpg',
+                        'image' => 'Proposition d´images/niveau b2.png',
                     ],
                     [
                         'level' => 'C1',
@@ -67,7 +67,7 @@
                         'description' => 'Expression fluide, textes exigeants.',
                         'duration' => '~140h',
                         'exam' => 'ÖSD Zertifikat Deutsch C1',
-                        'image' => 'course_5.jpg',
+                        'image' => 'Proposition d´images/niveau c1.png',
                     ],
                     [
                         'level' => 'Prépa examens',
@@ -75,7 +75,7 @@
                         'description' => 'Entraînement intensif aux épreuves ÖSD.',
                         'duration' => '~40h',
                         'exam' => 'Tous niveaux ÖSD',
-                        'image' => 'course_6.jpg',
+                        'image' => 'Proposition d´images/Cours Preparatifs aux examens.png',
                     ],
                 ];
             @endphp
@@ -86,7 +86,6 @@
                         <div class="course-1-item h-100">
                             <figure class="thumnail">
                                 <a href="#"><img src="{{ asset('vendors/images/' . $course['image']) }}" alt="{{ $course['title'] }}" class="img-fluid"></a>
-                                <div class="category"><h3>{{ $course['level'] }}</h3></div>
                             </figure>
                             <div class="course-1-content pb-4">
                                 <h2>{{ $course['title'] }}</h2>
