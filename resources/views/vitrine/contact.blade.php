@@ -32,7 +32,7 @@
                     <h2 class="section-title-underline mb-4"><span>Nos coordonnées</span></h2>
                     <ul class="list-unstyled">
                         <li class="mb-3"><strong>Adresse siège :</strong><br>Sokodé, Komah 1 - en face du 23è BIR, Togo</li>
-                        <li class="mb-3"><strong>Adresse antenne :</strong><br>Kara, Quartier Dongoyo, Togo (centre ouvert)</li>
+                        <li class="mb-3"><strong>Adresse antenne :</strong><br>Kara, Quartier Dongoyo, Togo</li>
                         <li class="mb-3"><strong>Téléphone :</strong> <a href="tel:+22890333232">+228 90 33 32 32</a></li>
                         <li class="mb-3"><strong>Email :</strong> <a href="mailto:gf@cial-de.com">gf@cial-de.com</a></li>
                         <li class="mb-3"><strong>Horaires (proposition) :</strong><br>Lun-Ven : 8h00-18h00 | Sam : 8h00-13h00</li>

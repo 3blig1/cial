@@ -24,7 +24,7 @@
       <div class="col-lg-3">
           <h3 class="footer-heading"><span>Nos centres</span></h3>
           <p><strong>Siège - Sokodé</strong><br>Komah 1, près du 23è BIR</p>
-          <p><strong>Antenne - Kara</strong><br>Quartier Dongoyo<br>(centre ouvert)</p>
+          <p><strong>Antenne - Kara</strong><br>Quartier Dongoyo</p>
       </div>
       <div class="col-lg-3">
           <h3 class="footer-heading"><span>Contact</span></h3>

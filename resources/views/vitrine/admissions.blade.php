@@ -62,8 +62,7 @@
                     </ul>
 
                     <p class="mb-1"><strong>Sessions d'examen :</strong> Les sessions sont organisées régulièrement à Sokodé.</p>
-                    <p>Prochaines dates : nous contacter au <a href="tel:+22890333232">+228 90 33 32 32</a> ou par email à <a href="mailto:gf@cial-de.com">gf@cial-de.com</a>.</p>
-                    <p><em>À compléter avec un calendrier précis dès confirmation des prochaines dates de session.</em></p>
+                    <p>Prochaines dates : nous contacter par WhatsApp au <a href="https://wa.me/22890333232">+228 90 33 32 32</a> ou par email à <a href="mailto:gf@cial-de.com">gf@cial-de.com</a>.</p>
                 </div>
             </div>
         </div>

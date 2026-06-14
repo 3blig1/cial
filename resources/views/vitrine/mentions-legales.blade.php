@@ -50,15 +50,15 @@
                                 </tr>
                                 <tr>
                                     <th>RCCM</th>
-                                    <td>[À renseigner]</td>
+                                    <td>TG-SOK-01-2025-B13-00001</td>
                                 </tr>
                                 <tr>
                                     <th>NIF</th>
-                                    <td>[À renseigner]</td>
+                                    <td>1001994527</td>
                                 </tr>
                                 <tr>
                                     <th>IBAN</th>
-                                    <td>[À renseigner selon politique de diffusion]</td>
+                                    <td>TG53TG1160101108624950010132</td>
                                 </tr>
                                 <tr>
                                     <th>Téléphone</th>
@@ -69,17 +69,12 @@
                                     <td><a href="mailto:gf@cial-de.com">gf@cial-de.com</a></td>
                                 </tr>
                                 <tr>
-                                    <th>Hébergeur du site</th>
-                                    <td>[À renseigner - nom, adresse de l'hébergeur]</td>
-                                </tr>
-                                <tr>
                                     <th>Accréditation ÖSD</th>
                                     <td>Centre d'examen ÖSD accrédité - depuis le 9 avril 2026</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <p><em>Les champs [À renseigner] doivent être complétés par la Direction avant mise en ligne.</em></p>
                 </div>
             </div>
         </div>
