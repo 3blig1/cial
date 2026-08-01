@@ -84,8 +84,13 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        // Debug : affiche toutes les données reçues
-        \Log::info('Formulaire reçu', $request->all());
+        $schoolId = (int) session('school_id');
+
+        if (! $schoolId) {
+            return redirect()
+                ->route('students.index')
+                ->with('error', "Impossible d'inscrire l'élève: aucune école active n'est sélectionnée.");
+        }
 
         $validated = $request->validate([
             'last_name' => 'required|string|max:255',
@@ -116,6 +121,7 @@ class StudentController extends Controller
             'emergency_contact_relationship' => $validated['emergency_contact_relationship'] ?? null,
             'emergency_contact_phone' => $validated['emergency_contact_phone'] ?? null,
             'emergency_contact_email' => $validated['emergency_contact_email'] ?? null,
+            'school_id' => $schoolId,
         ];
 
         if ($request->hasFile('profile_photo')) {
