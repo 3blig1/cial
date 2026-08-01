@@ -10,7 +10,7 @@
             <span>Retour aux utilisateurs</span>
         </a>
         <form action="{{ route('users.permissions.index') }}" method="GET" class="flex w-full items-center sm:w-auto">
-            <input type="text" name="search" placeholder="Rechercher par nom ou email..."
+                 <input type="text" name="search" placeholder="Rechercher par nom..."
                    class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-l-button focus:outline-none focus:ring-2 focus:ring-primary"
                    value="{{ request('search') }}">
             <button type="submit" class="px-4 py-2 bg-primary text-white font-medium rounded-r-button hover:bg-primary/90">
@@ -49,7 +49,6 @@
                     <div class="flex items-center justify-between gap-2">
                         <div>
                             <p class="text-base font-semibold text-gray-900">{{ $user->name }}</p>
-                            <p class="break-words text-sm text-gray-500">{{ $user->email }}</p>
                         </div>
                         <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
                             {{ ucfirst($user->role) }}
