@@ -65,7 +65,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a href="{{ route('students.show', $student) }}" class="text-primary hover:text-primary/80">Voir</a>
                         <a href="{{ route('students.edit', $student) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Éditer</a>
-                        @if(auth()->user()->isAdmin())
+                        @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('delete_students'))
                         <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élève ?');">
                             @csrf
                             @method('DELETE')
