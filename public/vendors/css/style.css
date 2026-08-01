@@ -435,6 +435,38 @@ h1, h2, h3,
     font-size: 1.1rem;
     max-width: 400px; }
 
+  @media (max-width: 767.98px) {
+    .intro-section,
+    .intro-section .container .row {
+      height: 70vh;
+      min-height: 520px;
+    }
+
+    .intro-section h1 {
+      font-size: 2.4rem;
+      line-height: 1.1;
+    }
+
+    .intro-section p {
+      font-size: 1rem;
+      max-width: 100%;
+    }
+
+    .hero-slide .btn {
+      display: block;
+      width: 100%;
+      margin: 0 0 .75rem 0 !important;
+    }
+
+    .hero-slide .owl-nav {
+      display: none;
+    }
+
+    .hero-slide .owl-dots {
+      bottom: 16px;
+    }
+  }
+
 .custom-breadcrumns {
   padding: 20px 0; }
   .custom-breadcrumns span, .custom-breadcrumns a {
@@ -788,6 +820,25 @@ h1, h2, h3,
     color: #fff;
     padding-top: 7rem;
     text-align: center; }
+
+@media (max-width: 767.98px) {
+  .footer {
+    padding: 3rem 0 2rem;
+  }
+
+  .footer .copyright {
+    padding-top: 2rem;
+  }
+
+  .footer .footer-logo {
+    text-align: center !important;
+  }
+
+  .footer .footer-logo img {
+    max-width: 120px;
+    height: auto;
+  }
+}
 
 .ftco-subscribe-1 {
   background-size: cover;

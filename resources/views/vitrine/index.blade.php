@@ -14,8 +14,9 @@
                         <h1>Bienvenue au CIAL</h1>
                         <p class="lead text-white mb-4">Une langue. Une culture. Un avenir.</p>
                         <p>
-                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
                             <a href="https://examenosd.cial-de.com/exams" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
+                            
+                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
                         </p>
                     </div>
                 </div>
@@ -27,8 +28,11 @@
                 <div class="row align-items-center">
                     <div class="col-lg-12 mx-auto text-center" data-aos="fade-up">
                         <h1>Parle allemand, saisis ton avenir!</h1>
-                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
+                        <p class="lead text-white mb-4"></p>
+                        <p>
                             <a href="https://examenosd.cial-de.com/exams" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
+
+                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
                         </p>
                     </div>
                 </div>

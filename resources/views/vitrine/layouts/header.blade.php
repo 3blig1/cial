@@ -14,15 +14,11 @@
             <a href="https://wa.me/22890333232" class="small mr-3"><span class="icon-question-circle-o mr-2"></span> Avez vous des questions?</a> 
             <a href="tel:+22890333232" class="small mr-3"><span class="icon-phone2 mr-2"></span> +228 90 33 32 32</a> 
             <a href="mailto:gf@cial-de.com" class="small mr-3"><span class="icon-envelope-o mr-2"></span> gf@cial-de.com</a> 
-          <a href="https://www.facebook.com/share/1DKdTrmYaX/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook CIAL"><span class="icon-facebook"></span></a>
-          <a href="https://www.tiktok.com/@cial.togo" target="_blank" rel="noopener noreferrer" aria-label="TikTok CIAL"><span><svg xmlns="http://www.w3.org/2000/svg" width="15" height="20" fill="currentColor" viewBox="0 0 15 20" aria-hidden="true"><path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z"/></svg></span></a>
-          <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a>
-        
+                <a href="https://www.facebook.com/share/1DKdTrmYaX/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook CIAL"><span class="icon-facebook"></span></a>
+                <a href="https://www.tiktok.com/@cial.togo" target="_blank" rel="noopener noreferrer" aria-label="TikTok CIAL"><span><svg xmlns="http://www.w3.org/2000/svg" width="15" height="20" fill="currentColor" viewBox="0 0 15 20" aria-hidden="true"><path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z"/></svg></span></a>
           </div>
-          <div class="">
-       
-      </div>
-          <div class=" text-right">
+              <div class="col-12 col-lg-3 d-flex align-items-center justify-content-end text-right">
+                <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black mr-3" aria-label="Ouvrir le menu"><span class="icon-menu h3"></span></a>
             <a href="{{ route('examens-osd') }}" class="small btn btn-primary px-4 py-2 rounded-0"><span class="icon-check"></span> Examens ÖSD</a>
           </div>
         </div>
