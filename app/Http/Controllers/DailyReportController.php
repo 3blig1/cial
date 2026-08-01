@@ -100,9 +100,16 @@ class DailyReportController extends Controller
 
     public function destroy(DailyReport $report)
     {
-        if (! Auth::user()->isAdmin()) {
+        $user = Auth::user();
+
+        if (! $user->isAdmin() && ! $user->hasPermission('delete_reports')) {
             abort(403);
         }
+
+        if (! $user->isAdmin() && Auth::id() !== $report->user_id) {
+            abort(403, "Vous n'avez pas la permission de supprimer ce rapport.");
+        }
+
         $report->delete();
         return redirect()->route('reports.index')->with('success', 'Rapport supprimé avec succès.');
     }

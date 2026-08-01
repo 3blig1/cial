@@ -63,7 +63,7 @@
                         @if(auth()->user()->isAdmin() || (auth()->user()->isSecretary() && auth()->id() === $report->user_id && now()->isSameDay($report->created_at)))
                             <a href="{{ route('reports.edit', $report) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Éditer</a>
                         @endif
-                        @if(auth()->user()->isAdmin())
+                        @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('delete_reports'))
                         <form action="{{ route('reports.destroy', $report) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ?');">
                             @csrf
                             @method('DELETE')
