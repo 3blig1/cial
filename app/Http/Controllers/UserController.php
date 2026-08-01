@@ -16,8 +16,9 @@ class UserController extends Controller
     {
         $roles = ['admin', 'secretary', 'teacher', 'student'];
         $schools = School::where('is_active', true)->orderBy('name')->get();
+        $permissionOptions = User::delegablePermissions();
 
-        return view('users.create', compact('roles', 'schools'));
+        return view('users.create', compact('roles', 'schools', 'permissionOptions'));
     }
 
     public function store(Request $request)
@@ -29,6 +30,8 @@ class UserController extends Controller
             'role' => ['required', Rule::in(['admin', 'secretary', 'teacher', 'student'])],
             'school_ids' => ['nullable', 'array', 'required_if:role,secretary,teacher,student', 'min:1'],
             'school_ids.*' => ['integer', 'exists:schools,id'],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['string', Rule::in(array_keys(User::delegablePermissions()))],
         ]);
 
         $rawPassword = $validated['role'] === 'student'
@@ -40,7 +43,11 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($rawPassword),
             'role' => $validated['role'],
+            'permissions' => [],
         ]);
+
+        $user->setDelegatedPermissions($validated['permissions'] ?? []);
+        $user->save();
 
         if ($validated['role'] === 'admin') {
             $user->schools()->detach();
@@ -73,6 +80,28 @@ class UserController extends Controller
         return view('users.index', compact('users', 'roles', 'schools'));
     }
 
+    public function permissionsIndex(Request $request)
+    {
+        $query = User::query()
+            ->with('schools')
+            ->whereIn('role', ['secretary', 'teacher'])
+            ->where('id', '!=', Auth::id())
+            ->where('name', '!=', 'Admin');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->latest()->paginate(15)->withQueryString();
+        $permissionOptions = User::delegablePermissions();
+
+        return view('users.permissions', compact('users', 'permissionOptions'));
+    }
+
     public function updateRole(Request $request, User $user)
     {
         // Un admin ne peut pas changer son propre rôle via cette interface
@@ -91,6 +120,10 @@ class UserController extends Controller
 
         $user->update(['role' => $validated['role']]);
 
+        if (! $user->canReceiveDelegatedPermissions()) {
+            $user->update(['permissions' => []]);
+        }
+
         return back()->with('success', 'Le rôle de ' . $user->name . ' a été mis à jour.');
     }
 
@@ -108,6 +141,27 @@ class UserController extends Controller
         $user->schools()->sync($validated['school_ids']);
 
         return back()->with('success', 'Les accès école de ' . $user->name . ' ont été mis à jour.');
+    }
+
+    public function updatePermissions(Request $request, User $user)
+    {
+        if ($user->name === 'Admin' || $user->isAdmin()) {
+            return back()->with('error', 'Les permissions deleguees ne s\'appliquent pas a l\'administrateur principal.');
+        }
+
+        if (! $user->canReceiveDelegatedPermissions()) {
+            return back()->with('error', 'Seuls un secretaire ou un enseignant peuvent recevoir des permissions deleguees.');
+        }
+
+        $validated = $request->validate([
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['string', Rule::in(array_keys(User::delegablePermissions()))],
+        ]);
+
+        $user->setDelegatedPermissions($validated['permissions'] ?? []);
+        $user->save();
+
+        return back()->with('success', 'Les permissions de ' . $user->name . ' ont ete mises a jour.');
     }
 
     public function destroy(User $user)

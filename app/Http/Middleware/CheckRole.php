@@ -13,9 +13,29 @@ class CheckRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle(Request $request, Closure $next, ...$checks): Response
     {
-        if (!auth()->check() || !$request->user()->hasAnyRole($roles)) {
+        if (! auth()->check()) {
+            abort(403, 'ACTION NON AUTORISÉE.');
+        }
+
+        $roles = [];
+        $permissions = [];
+
+        foreach ($checks as $check) {
+            if (str_starts_with($check, 'permission:')) {
+                $permissions[] = substr($check, strlen('permission:'));
+                continue;
+            }
+
+            $roles[] = $check;
+        }
+
+        $user = $request->user();
+        $hasRequiredRole = $roles !== [] && $user->hasAnyRole($roles);
+        $hasRequiredPermission = $permissions !== [] && $user->hasAnyPermission($permissions);
+
+        if (! $hasRequiredRole && ! $hasRequiredPermission) {
             abort(403, 'ACTION NON AUTORISÉE.');
         }
 

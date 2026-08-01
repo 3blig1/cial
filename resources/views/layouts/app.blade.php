@@ -62,7 +62,6 @@
         }
         input[type="checkbox"]:checked + .custom-checkbox { background: #4F46E5; border-color: #4F46E5; }
         input[type="checkbox"]:checked + .custom-checkbox::after { opacity: 1; }
-        input[type="checkbox"] { display: none; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -79,7 +78,7 @@
                 <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('dashboard') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                     <i class="ri-dashboard-line w-5 h-5 mr-3"></i><span>Tableau de bord</span>
                 </a>
-                @if(auth()->user()->hasAnyRole(['admin', 'secretary']))
+                @if(auth()->user()->hasAnyRole(['admin', 'secretary']) || auth()->user()->hasPermission('manage_students'))
                     <a href="{{ route('students.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('students.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-user-line w-5 h-5 mr-3"></i><span>Élèves</span>
                     </a>
@@ -87,29 +86,40 @@
                         <i class="ri-time-line w-5 h-5 mr-3"></i><span>Liste d'attente</span>
                     </a>   
                 @endif
-                @if(auth()->user()->hasAnyRole(['admin', 'secretary', 'teacher']))
+                @if(auth()->user()->hasAnyRole(['admin', 'secretary', 'teacher']) || auth()->user()->hasPermission('manage_reports'))
                     <a href="{{ route('reports.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('reports.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-file-chart-line w-5 h-5 mr-3"></i><span>Rapports</span>
                     </a>
                 @endif
-                @if(auth()->user()->isAdmin())
+                @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('manage_teachers'))
                     <a href="{{ route('teachers.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('teachers.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-team-line w-5 h-5 mr-3"></i><span>Enseignants</span>
                     </a>
+                @endif
+                @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('manage_courses'))
                     <a href="{{ route('courses.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('courses.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-book-open-line w-5 h-5 mr-3"></i><span>Cours</span>
                     </a>
+                @endif
+                @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('manage_subjects'))
                     <a href="{{ route('subjects.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('subjects.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-book-2-line w-5 h-5 mr-3"></i><span>Matières</span>
                     </a>
+                @endif
+                @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('manage_schools'))
                     <a href="{{ route('schools.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('schools.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-building-line w-5 h-5 mr-3"></i><span>Écoles</span>
                     </a>
-                    <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('users.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                @endif
+                @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('manage_users'))
+                    <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('users.index', 'users.create') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-user-line w-5 h-5 mr-3"></i><span>utilisateurs</span>
                     </a>
+                    <a href="{{ route('users.permissions.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('users.permissions.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
+                        <i class="ri-shield-user-line w-5 h-5 mr-3"></i><span>Permissions</span>
+                    </a>
                 @endif
-                @if(auth()->user()->hasAnyRole(['admin', 'teacher']))
+                @if(auth()->user()->hasAnyRole(['admin', 'teacher']) || auth()->user()->hasPermission('manage_exams'))
                     <a href="{{ route('exams.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('exams.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-file-list-2-line w-5 h-5 mr-3"></i><span>Exams</span>
                     </a>

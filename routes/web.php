@@ -91,7 +91,7 @@ Route::middleware(['auth', 'school.context'])->group(function () {
     // Routes d'administration
     Route::prefix('admin')->group(function () {
 
-    Route::middleware(['auth', 'role:teacher,admin'])->group(function () {
+    Route::middleware(['auth', 'role:teacher,admin,permission:manage_exams'])->group(function () {
     Route::get('/exams', [ExamController::class, 'index'])->name('exams.index');
     Route::get('/exams/create', [ExamController::class, 'create'])->name('exams.create');
     Route::post('/exams', [ExamController::class, 'store'])->name('exams.store');
@@ -103,7 +103,7 @@ Route::middleware(['auth', 'school.context'])->group(function () {
     Route::get('/exams/{exam}/grades/export', [ExamController::class, 'exportGrades'])->name('exams.exportGrades');
 });
         // Routes accessibles par l'admin ET le secrétaire
-        Route::middleware('role:admin,secretary')->group(function () {
+        Route::middleware('role:admin,secretary,permission:manage_students')->group(function () {
             Route::get('/students', [StudentController::class, 'index'])->name('students.index');
             Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
             Route::post('/students', [StudentController::class, 'store'])->name('students.store');
@@ -114,7 +114,7 @@ Route::middleware(['auth', 'school.context'])->group(function () {
         });
 
         // Routes accessibles par admin, secrétaire et enseignant
-        Route::middleware('role:admin,secretary,teacher')->group(function () {
+        Route::middleware('role:admin,secretary,teacher,permission:manage_reports')->group(function () {
             Route::get('/reports', [DailyReportController::class, 'index'])->name('reports.index');
             Route::get('/reports/create', [DailyReportController::class, 'create'])->name('reports.create');
             Route::post('/reports', [DailyReportController::class, 'store'])->name('reports.store');
@@ -124,22 +124,39 @@ Route::middleware(['auth', 'school.context'])->group(function () {
         });
 
         // Routes accessibles uniquement par l'admin
-        Route::middleware('role:admin')->group(function () {
+        Route::middleware('role:admin,permission:manage_teachers')->group(function () {
             Route::resource('teachers', TeacherController::class);
+        });
+
+        Route::middleware('role:admin,permission:manage_courses')->group(function () {
             Route::resource('courses', CourseController::class);
+        });
+
+        Route::middleware('role:admin,permission:manage_subjects')->group(function () {
             Route::resource('subjects', SubjectController::class);
+        });
+
+        Route::middleware('role:admin,permission:manage_schools')->group(function () {
             Route::resource('schools', SchoolController::class)->except('show');
-            
+        });
+
+        Route::middleware('role:admin,permission:manage_users')->group(function () {
             Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
             Route::post('/users', [UserController::class, 'store'])->name('users.store');
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
+            Route::get('/users/permissions', [UserController::class, 'permissionsIndex'])->name('users.permissions.index');
             Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.updateRole');
             Route::patch('/users/{user}/schools', [UserController::class, 'updateSchools'])->name('users.updateSchools');
+            Route::patch('/users/{user}/permissions', [UserController::class, 'updatePermissions'])->name('users.updatePermissions');
             Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-            
+        });
+
+        Route::middleware('role:admin,permission:delete_reports')->group(function () {
             Route::delete('/reports/{report}', [DailyReportController::class, 'destroy'])->name('reports.destroy');
+        });
+
+        Route::middleware('role:admin,permission:delete_students')->group(function () {
             Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
-            
         });
         
         // Interface d'administration pour la liste d'attente
@@ -150,14 +167,14 @@ Route::middleware(['auth', 'school.context'])->group(function () {
         });
 
         // Interface d'administration pour la liste d'attente des étudiants
-        Route::middleware(['auth', 'role:admin,secretary'])->group(function () {
+        Route::middleware(['auth', 'role:admin,secretary,permission:manage_pending_students'])->group(function () {
             Route::get('/pending-students', [\App\Http\Controllers\PendingStudentController::class, 'index'])->name('pending-students.index');
             Route::post('/pending-students/{pendingStudent}/activate', [\App\Http\Controllers\PendingStudentController::class, 'activate'])->name('pending-students.activate');
             Route::get('/pending-students/{pendingStudent}/registration-form', [\App\Http\Controllers\PendingStudentController::class, 'downloadRegistrationForm'])->name('pending-students.downloadRegistrationForm');
         });
         
         // Suppression des étudiants en attente (admin et secrétaire)
-        Route::middleware(['auth', 'role:admin,secretary'])->group(function () {
+        Route::middleware(['auth', 'role:admin,secretary,permission:manage_pending_students'])->group(function () {
             Route::delete('/pending-students/{pendingStudent}', [\App\Http\Controllers\PendingStudentController::class, 'destroy'])->name('pending-students.destroy');
         });
     });

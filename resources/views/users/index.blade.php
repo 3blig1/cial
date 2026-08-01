@@ -5,6 +5,10 @@
 @section('header-content')
     <h1 class="text-2xl font-bold text-gray-900">Gestion des utilisateurs</h1>
     <div class="ml-auto flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+        <a href="{{ route('users.permissions.index') }}" class="px-4 py-2 bg-white text-gray-700 font-medium rounded-button border border-gray-200 hover:bg-gray-50 inline-flex items-center justify-center gap-2">
+            <i class="ri-shield-user-line"></i>
+            <span>Gérer les permissions</span>
+        </a>
         <a href="{{ route('users.create') }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 inline-flex items-center justify-center gap-2">
             <i class="ri-add-line"></i>
             <span>Créer un utilisateur</span>

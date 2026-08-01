@@ -107,6 +107,18 @@
             </div>
         </div>
 
+        <div>
+            <label for="permissions" class="block text-sm font-semibold text-gray-700 mb-2">Permissions déléguées</label>
+            <select id="permissions" name="permissions[]" multiple size="6" class="w-full rounded-xl border-gray-300 bg-gray-50/60 focus:border-primary focus:ring-primary shadow-sm">
+                @foreach($permissionOptions as $permissionKey => $permissionLabel)
+                    <option value="{{ $permissionKey }}" @selected(collect(old('permissions', []))->contains($permissionKey))>{{ $permissionLabel }}</option>
+                @endforeach
+            </select>
+            <p class="mt-2 text-xs text-gray-500">Attribuez uniquement aux enseignants et secrétaires les droits que l'administrateur souhaite déléguer.</p>
+            @error('permissions')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+            @error('permissions.*')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+        </div>
+
         <div class="flex items-center justify-between gap-4 pt-4 border-t border-gray-100">
             <p class="text-xs sm:text-sm text-gray-500">
                 Vérifiez les accès avant de valider la création.

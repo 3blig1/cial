@@ -11,6 +11,20 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+        public const DELEGABLE_PERMISSIONS = [
+            'manage_students' => 'Gerer les eleves',
+            'manage_pending_students' => 'Gerer la liste d\'attente etudiants',
+                'manage_reports' => 'Gerer les rapports',
+                'manage_exams' => 'Gerer les examens',
+            'manage_teachers' => 'Gerer les enseignants',
+            'manage_courses' => 'Gerer les cours',
+            'manage_subjects' => 'Gerer les matieres',
+            'manage_schools' => 'Gerer les ecoles',
+            'manage_users' => 'Gerer les utilisateurs',
+            'delete_students' => 'Supprimer des eleves',
+            'delete_reports' => 'Supprimer des rapports',
+        ];
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -24,6 +38,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'permissions',
     ];
 
     /**
@@ -46,6 +61,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'permissions' => 'array',
         ];
     }
 
@@ -96,6 +112,44 @@ class User extends Authenticatable
     public function hasRole(string $role): bool
     {
         return $this->role === $role;
+    }
+
+    public static function delegablePermissions(): array
+    {
+        return self::DELEGABLE_PERMISSIONS;
+    }
+
+    public function canReceiveDelegatedPermissions(): bool
+    {
+        return $this->isSecretary() || $this->isTeacher();
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return in_array($permission, $this->permissions ?? [], true);
+    }
+
+    public function hasAnyPermission(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function setDelegatedPermissions(array $permissions): void
+    {
+        $allowedPermissions = array_keys(self::delegablePermissions());
+        $filteredPermissions = array_values(array_intersect($allowedPermissions, $permissions));
+
+        $this->permissions = $this->canReceiveDelegatedPermissions() ? $filteredPermissions : [];
     }
     
     /**
