@@ -8,6 +8,10 @@
     <link rel="apple-touch-icon"  sizes="16x16" href="{{ asset('logo/Logo_icone.png') }}?v=2">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    @php
+        $vitrineStyleVersion = file_exists(public_path('vendors/css/style.css')) ? filemtime(public_path('vendors/css/style.css')) : '1';
+        $vitrineMainJsVersion = file_exists(public_path('vendors/js/main.js')) ? filemtime(public_path('vendors/js/main.js')) : '1';
+    @endphp
     <link href="https://fonts.googleapis.com/css?family=Muli:300,400,700,900" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('vendors/fonts/icomoon/style.css')}}">
     <link rel="stylesheet" href="{{asset('vendors/css/bootstrap.min.css')}}">
@@ -19,7 +23,7 @@
     <link rel="stylesheet" href="{{asset('vendors/fonts/flaticon/font/flaticon.css')}}">
     <link rel="stylesheet" href="{{asset('vendors/css/aos.css')}}">
     <link href="{{asset('vendors/css/jquery.mb.YTPlayer.min.css')}}" media="all" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="{{asset('vendors/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('vendors/css/style.css')}}?v={{ $vitrineStyleVersion }}">
     <script type="application/ld+json">
         {
         "@context": "https://schema.org",
@@ -51,7 +55,7 @@
     <script src="{{asset('vendors/js/jquery.fancybox.min.js')}}"></script>
     <script src="{{asset('vendors/js/jquery.sticky.js')}}"></script>
     <script src="{{asset('vendors/js/jquery.mb.YTPlayer.min.js')}}"></script>
-    <script src="{{asset('vendors/js/main.js')}}"></script>
+    <script src="{{asset('vendors/js/main.js')}}?v={{ $vitrineMainJsVersion }}"></script>
     @stack('scripts')
 </body>
 </html>
