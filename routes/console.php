@@ -115,12 +115,63 @@ Artisan::command('school:backfill-student-school {--apply : Persist changes in d
         ];
     };
 
+    $processUserSchoolPivot = function () use ($apply, $findUserIdByEmail) {
+        $students = DB::table('students')
+            ->whereNotNull('school_id')
+            ->get(['id', 'user_id', 'email', 'school_id']);
+
+        $missingPivot = 0;
+        $attached = 0;
+        $skipped = 0;
+
+        foreach ($students as $student) {
+            $userId = $student->user_id ? (int) $student->user_id : $findUserIdByEmail($student->email ?? null);
+            $schoolId = $student->school_id ? (int) $student->school_id : null;
+
+            if (! $userId || ! $schoolId) {
+                $skipped++;
+                continue;
+            }
+
+            $exists = DB::table('school_user')
+                ->where('user_id', $userId)
+                ->where('school_id', $schoolId)
+                ->exists();
+
+            if ($exists) {
+                continue;
+            }
+
+            $missingPivot++;
+
+            if ($apply) {
+                DB::table('school_user')->insert([
+                    'user_id' => $userId,
+                    'school_id' => $schoolId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            $attached++;
+        }
+
+        return [
+            'table' => 'school_user (depuis students)',
+            'total_missing' => $missingPivot,
+            'updated' => $attached,
+            'fallback_used' => 0,
+            'skipped' => $skipped,
+        ];
+    };
+
     $studentResult = $processTable('students', true);
     $pendingResult = $processTable('pending_students', false);
+    $userSchoolResult = $processUserSchoolPivot();
 
     $this->info($apply ? 'Mode APPLY: mises a jour enregistrees.' : 'Mode DRY-RUN: aucune ecriture en base.');
 
-    foreach ([$studentResult, $pendingResult] as $result) {
+    foreach ([$studentResult, $pendingResult, $userSchoolResult] as $result) {
         $this->line('');
         $this->line("Table: {$result['table']}");
         $this->line("- Sans school_id: {$result['total_missing']}");
