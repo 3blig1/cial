@@ -128,10 +128,10 @@ class PendingStudentController extends Controller
                 'error' => $exception->getMessage(),
             ]);
 
-            $message = 'Activation impossible pour le moment. Verifiez les donnees puis reessayez.';
+            $message = 'L\'activation n\'a pas pu aboutir pour le moment. Veuillez reessayer.';
 
             if (($exception->errorInfo[1] ?? null) === 1054) {
-                $message = 'Activation impossible: base de donnees non a jour (colonne manquante). Lancez les migrations.';
+                $message = 'L\'activation n\'a pas pu aboutir pour le moment. Veuillez contacter l\'administration si le probleme persiste.';
             } elseif (($exception->errorInfo[1] ?? null) === 1062) {
                 $existingStudent = Student::where('school_id', $schoolId)
                     ->where('email', $normalizedEmail)
@@ -148,7 +148,7 @@ class PendingStudentController extends Controller
                 $errorMessage = $exception->getMessage();
 
                 if (str_contains($errorMessage, 'students_school_id_email_unique')) {
-                    $message = 'Activation impossible: un eleve avec cet email existe deja dans cette ecole.';
+                    $message = 'Un etudiant avec cette adresse email existe deja dans cette ecole.';
                 } elseif (str_contains($errorMessage, 'users_email_unique')) {
                     $existingUser = $this->findUserByEmail($normalizedEmail);
 
@@ -183,12 +183,12 @@ class PendingStudentController extends Controller
                         ->route('pending-students.index')
                         ->with('success', 'Etudiant active avec succes.');
                 } elseif (str_contains($errorMessage, 'school_user_school_id_user_id_unique')) {
-                    $message = 'Activation impossible: cet utilisateur est deja rattache a cette ecole.';
+                    $message = 'Cet utilisateur est deja associe a cette ecole.';
                 } else {
-                    $message = 'Activation impossible: un doublon a ete detecte pendant l\'activation.';
+                    $message = 'Certaines informations existent deja. Verifiez l\'adresse email de l\'etudiant puis reessayez.';
                 }
             } elseif (($exception->errorInfo[1] ?? null) === 1452) {
-                $message = 'Activation impossible: reference de donnees invalide (ecole/utilisateur).';
+                $message = 'L\'activation n\'a pas pu aboutir car certaines informations de l\'etudiant sont incompletes ou invalides.';
             }
 
             return redirect()
@@ -203,7 +203,7 @@ class PendingStudentController extends Controller
 
             return redirect()
                 ->route('pending-students.index')
-                ->with('error', 'Activation impossible pour le moment. Verifiez les donnees puis reessayez.');
+                ->with('error', 'L\'activation n\'a pas pu aboutir pour le moment. Veuillez reessayer ou contacter l\'administration.');
         }
     }
 
