@@ -6,6 +6,7 @@
 @section('content')
     @include('vitrine.layouts.header')
 
+    <div class="hero-section">
     <div class="hero-slide owl-carousel site-blocks-cover">
         <div class="intro-section" style="background-image: url('{{ asset('vendors/images/Proposition d´images/image etudiants cial.jpg') }}');">
             <div class="container">
@@ -13,11 +14,6 @@
                     <div class="col-lg-12 mx-auto text-center" data-aos="fade-up">
                         <h1>Bienvenue au CIAL</h1>
                         <p class="lead text-white mb-4">Une langue. Une culture. Un avenir.</p>
-                        <p>
-                            <a href="https://examenosd.cial-de.com/exams" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
-                            
-                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -29,15 +25,19 @@
                     <div class="col-lg-12 mx-auto text-center" data-aos="fade-up">
                         <h1>Parle allemand, saisis ton avenir!</h1>
                         <p class="lead text-white mb-4"></p>
-                        <p>
-                            <a href="https://examenosd.cial-de.com/exams" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
-
-                            <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2 mr-2">S'inscrire</a>
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="hero-fixed-actions">
+        <div class="container">
+            <p class="hero-actions mb-0">
+                <a href="https://examenosd.cial-de.com/exams" class="btn btn-outline-light rounded-0 px-4 py-2">Passer un examen ÖSD</a>
+                <a href="https://examenosd.cial-de.com/register" class="btn btn-primary rounded-0 px-4 py-2">S'inscrire</a>
+            </p>
+        </div>
+    </div>
     </div>
 
     <div class="site-section">
