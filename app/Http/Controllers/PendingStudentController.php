@@ -50,6 +50,18 @@ class PendingStudentController extends Controller
                     ->first();
 
                 if ($existingStudent) {
+                    $existingUser = $existingStudent->user_id
+                        ? User::find($existingStudent->user_id)
+                        : $this->findUserByEmail($normalizedEmail);
+
+                    if ($existingUser) {
+                        if ($existingUser->role !== 'student') {
+                            $existingUser->update(['role' => 'student']);
+                        }
+
+                        $existingUser->schools()->syncWithoutDetaching([$schoolId]);
+                    }
+
                     if (! $pendingStudent->delete()) {
                         throw new \RuntimeException('Suppression pending student echouee.');
                     }

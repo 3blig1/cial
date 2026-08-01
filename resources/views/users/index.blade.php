@@ -87,6 +87,17 @@
                                 Toutes les écoles (Admin global)
                             </span>
                         @else
+                            <div class="mb-2 flex flex-wrap gap-1.5">
+                                @forelse($user->schools as $assignedSchool)
+                                    <span class="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                                        {{ $assignedSchool->name }}
+                                    </span>
+                                @empty
+                                    <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-500">
+                                        Aucune école attribuée
+                                    </span>
+                                @endforelse
+                            </div>
                             <form action="{{ route('users.updateSchools', $user) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
