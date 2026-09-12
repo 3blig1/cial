@@ -80,20 +80,20 @@
         </div>
     </div>
 
-    @if($isAdmin)
+    @if($showGlobalSchoolOverview ?? false)
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
             <div class="bg-white p-6 rounded-lg shadow-sm">
-                <h3 class="font-semibold mb-6">Progression des Inscriptions (Global toutes écoles)</h3>
+                <h3 class="font-semibold mb-6">Progression des Inscriptions (Toutes les écoles)</h3>
                 <div class="h-60" id="enrollmentChartGlobal"></div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow-sm">
-                <h3 class="font-semibold mb-6">Distribution des Niveaux (Global toutes écoles)</h3>
+                <h3 class="font-semibold mb-6">Distribution des Niveaux (Toutes les écoles)</h3>
                 <div class="h-60" id="levelChartGlobal"></div>
             </div>
         </div>
     @endif
 
-    @if($isAdmin)
+    @if($showGlobalSchoolOverview ?? false)
         <div class="mt-6 bg-white rounded-lg shadow-sm overflow-hidden">
             <div class="p-6 border-b">
                 <h3 class="font-semibold">Statistiques par école</h3>
@@ -218,7 +218,7 @@
         let enrollmentChartGlobal = null;
         let levelChartGlobal = null;
 
-        @if($isAdmin)
+        @if($showGlobalSchoolOverview ?? false)
             const enrollmentGlobalEl = document.getElementById('enrollmentChartGlobal');
             const levelGlobalEl = document.getElementById('levelChartGlobal');
 

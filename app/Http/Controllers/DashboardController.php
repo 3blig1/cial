@@ -50,27 +50,40 @@ class DashboardController extends Controller
             ]);
         }
 
-        $isAdmin = auth()->check() && auth()->user()->isAdmin();
-        $currentSchoolName = School::whereKey(session('school_id'))->value('name');
+        $user = auth()->user();
+        $isAdmin = $user->isAdmin();
+        $canViewGlobalSchoolStats = $isAdmin || $user->isSecretary() || $user->isTeacher();
+        $currentSchoolId = session('school_id');
+        $currentSchoolName = School::whereKey($currentSchoolId)->value('name');
 
-        $totalStudents = $isAdmin
-            ? Student::withoutGlobalScope('school')->count()
-            : Student::count();
+        $allActiveSchoolIds = School::where('is_active', true)->pluck('id')->all();
+        $accessibleSchoolIds = $isAdmin
+            ? $allActiveSchoolIds
+            : $user->schools()->where('schools.is_active', true)->pluck('schools.id')->all();
 
-        $totalTeachers = $isAdmin
-            ? Teacher::withoutGlobalScope('school')->count()
-            : Teacher::count();
+        $globalSchoolIds = $canViewGlobalSchoolStats ? $allActiveSchoolIds : $accessibleSchoolIds;
 
-        $activeCoursesCount = $isAdmin
-            ? Course::withoutGlobalScope('school')->where('end_date', '>=', now())->count()
-            : Course::where('end_date', '>=', now())->count();
+        $totalStudents = $canViewGlobalSchoolStats
+            ? Student::withoutGlobalScope('school')->whereIn('school_id', $globalSchoolIds)->count()
+            : Student::whereIn('school_id', $accessibleSchoolIds)->count();
 
-        $totalSchools = $isAdmin ? School::where('is_active', true)->count() : null;
+        $totalTeachers = $canViewGlobalSchoolStats
+            ? Teacher::withoutGlobalScope('school')->whereIn('school_id', $globalSchoolIds)->count()
+            : Teacher::whereIn('school_id', $accessibleSchoolIds)->count();
+
+        $activeCoursesCount = $canViewGlobalSchoolStats
+            ? Course::withoutGlobalScope('school')->whereIn('school_id', $globalSchoolIds)->where('end_date', '>=', now())->count()
+            : Course::whereIn('school_id', $accessibleSchoolIds)->where('end_date', '>=', now())->count();
+
+        $totalSchools = $canViewGlobalSchoolStats ? School::whereIn('id', $globalSchoolIds)->where('is_active', true)->count() : null;
 
         $schoolStats = collect();
 
-        if ($isAdmin) {
-            $activeSchools = School::where('is_active', true)->orderBy('name')->get();
+        if ($canViewGlobalSchoolStats) {
+            $activeSchools = School::whereIn('id', $globalSchoolIds)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
 
             $schoolStats = $activeSchools->map(function ($school) {
                 return [
@@ -87,9 +100,17 @@ class DashboardController extends Controller
 
         $recentCourses = Course::with('teacher')->latest()->take(5)->get();
 
-        // Données pour le graphique de progression des inscriptions (12 derniers mois)
+        $yearExpression = DB::connection()->getDriverName() === 'sqlite'
+            ? "strftime('%Y', created_at)"
+            : 'YEAR(created_at)';
+
+        $monthExpression = DB::connection()->getDriverName() === 'sqlite'
+            ? "CAST(strftime('%m', created_at) AS INTEGER)"
+            : 'MONTH(created_at)';
+
         $enrollments = Student::select(
-            DB::raw('YEAR(created_at) as year, MONTH(created_at) as month'),
+            DB::raw($yearExpression . ' as year'),
+            DB::raw($monthExpression . ' as month'),
             DB::raw('COUNT(*) as count')
         )
         ->where('created_at', '>=', now()->subYear())
@@ -100,7 +121,6 @@ class DashboardController extends Controller
         $enrollmentLabels = $enrollments->map(fn ($item) => \Carbon\Carbon::createFromDate($item->year, $item->month)->locale('fr')->shortMonthName . ' ' . $item->year);
         $enrollmentData = $enrollments->pluck('count');
 
-        // Données pour le graphique de distribution des niveaux
         $levelDistribution = Student::select('language_level', DB::raw('COUNT(*) as count'))
             ->groupBy('language_level')
             ->pluck('count', 'language_level');
@@ -112,7 +132,7 @@ class DashboardController extends Controller
         $globalEnrollmentSeries = collect();
         $globalLevelChartData = collect();
 
-        if ($isAdmin) {
+        if ($canViewGlobalSchoolStats) {
             $months = collect(range(11, 0))
                 ->map(fn ($offset) => now()->startOfMonth()->subMonths($offset));
 
@@ -123,16 +143,20 @@ class DashboardController extends Controller
             $globalEnrollmentsBySchool = Student::withoutGlobalScope('school')
                 ->select(
                     'school_id',
-                    DB::raw('YEAR(created_at) as year'),
-                    DB::raw('MONTH(created_at) as month'),
+                    DB::raw($yearExpression . ' as year'),
+                    DB::raw($monthExpression . ' as month'),
                     DB::raw('COUNT(*) as count')
                 )
+                ->whereIn('school_id', $globalSchoolIds)
                 ->whereNotNull('school_id')
                 ->where('created_at', '>=', now()->startOfMonth()->subMonths(11))
                 ->groupBy('school_id', 'year', 'month')
                 ->get();
 
-            $activeSchools = School::where('is_active', true)->orderBy('name')->get(['id', 'name']);
+            $activeSchools = School::whereIn('id', $globalSchoolIds)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get(['id', 'name']);
 
             $globalEnrollmentSeries = $activeSchools->map(function ($school) use ($months, $globalEnrollmentsBySchool) {
                 $data = $months->map(function ($date) use ($globalEnrollmentsBySchool, $school) {
@@ -180,7 +204,7 @@ class DashboardController extends Controller
                 'data' => $globalEnrollmentData,
             ]])->concat($globalEnrollmentSeries)->values();
 
-            $globalLevelDistribution = Student::withoutGlobalScope('school')
+            $globalLevelDistribution = Student::whereIn('school_id', $globalSchoolIds)
                 ->select('language_level', DB::raw('COUNT(*) as count'))
                 ->groupBy('language_level')
                 ->pluck('count', 'language_level');
@@ -206,6 +230,7 @@ class DashboardController extends Controller
             'globalEnrollmentData' => $globalEnrollmentData,
             'globalEnrollmentSeries' => $globalEnrollmentSeries,
             'globalLevelChartData' => $globalLevelChartData,
+            'showGlobalSchoolOverview' => $canViewGlobalSchoolStats,
         ]);
     }
 }

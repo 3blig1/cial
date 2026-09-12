@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4F46E5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Espace d'administration CIAL">
     <title>@yield('title', 'Formation')</title>
     <link rel="icon" type="image/png" href="{{ asset('logo/Logo_icone.png') }}">
+    <link rel="manifest" href="{{ asset('manifest-admin.json') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo/Logo_icone.png') }}">
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -86,7 +92,7 @@
                         <i class="ri-time-line w-5 h-5 mr-3"></i><span>Liste d'attente</span>
                     </a>   
                 @endif
-                @if(auth()->user()->hasAnyRole(['admin', 'secretary', 'teacher']) || auth()->user()->hasPermission('manage_reports'))
+                @if(auth()->user()->hasAnyRole(['admin', 'secretary', 'teacher']) || auth()->user()->hasPermission('manage_reports') || auth()->user()->hasPermission('manage_secretary_reports') || auth()->user()->hasPermission('manage_teacher_reports'))
                     <a href="{{ route('reports.index') }}" class="flex items-center px-4 py-3 {{ request()->routeIs('reports.*') ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:bg-gray-50' }}">
                         <i class="ri-file-chart-line w-5 h-5 mr-3"></i><span>Rapports</span>
                     </a>
@@ -215,6 +221,14 @@
         </main>
     </div>
     <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('{{ asset('sw-admin.js') }}').catch(function () {
+                    console.warn('Service worker non activé.');
+                });
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const button = document.getElementById('user-menu-button');
             const menu = document.getElementById('user-menu');

@@ -14,8 +14,12 @@ class User extends Authenticatable
         public const DELEGABLE_PERMISSIONS = [
             'manage_students' => 'Gerer les eleves',
             'manage_pending_students' => 'Gerer la liste d\'attente etudiants',
-                'manage_reports' => 'Gerer les rapports',
-                'manage_exams' => 'Gerer les examens',
+            'manage_reports' => 'Gerer les rapports',
+            'manage_secretary_reports' => 'Gerer les rapports secretaires des ecoles',
+            'manage_secretary_all_reports' => 'Gerer les rapports de tous les secretaires de toutes les ecoles',
+            'manage_teacher_reports' => 'Gerer les rapports enseignants des ecoles',
+            'manage_teacher_all_reports' => 'Gerer les rapports de tous les enseignants de toutes les ecoles',
+            'manage_exams' => 'Gerer les examens',
             'manage_teachers' => 'Gerer les enseignants',
             'manage_courses' => 'Gerer les cours',
             'manage_subjects' => 'Gerer les matieres',
@@ -137,6 +141,50 @@ class User extends Authenticatable
     {
         foreach ($permissions as $permission) {
             if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasSchoolAccess(int $schoolId): bool
+    {
+        return $this->schools()->whereKey($schoolId)->exists();
+    }
+
+    public function canManageReport(DailyReport $report): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if ($this->id === $report->user_id) {
+            return true;
+        }
+
+        $reportAuthor = $report->author()->first();
+
+        if (! $reportAuthor) {
+            return false;
+        }
+
+        if ($this->isSecretary()) {
+            if ($reportAuthor->isSecretary() && $this->hasPermission('manage_secretary_reports') && $this->hasSchoolAccess((int) $report->school_id)) {
+                return true;
+            }
+
+            if ($reportAuthor->isSecretary() && $this->hasPermission('manage_secretary_all_reports')) {
+                return true;
+            }
+        }
+
+        if ($this->isTeacher()) {
+            if ($reportAuthor->isTeacher() && $this->hasPermission('manage_teacher_reports') && $this->hasSchoolAccess((int) $report->school_id)) {
+                return true;
+            }
+
+            if ($reportAuthor->isTeacher() && $this->hasPermission('manage_teacher_all_reports')) {
                 return true;
             }
         }

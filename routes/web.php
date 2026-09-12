@@ -114,7 +114,7 @@ Route::middleware(['auth', 'school.context'])->group(function () {
         });
 
         // Routes accessibles par admin, secrétaire et enseignant
-        Route::middleware('role:admin,secretary,teacher,permission:manage_reports')->group(function () {
+        Route::middleware('role:admin,secretary,teacher,permission:manage_reports,permission:manage_secretary_reports,permission:manage_teacher_reports')->group(function () {
             Route::get('/reports', [DailyReportController::class, 'index'])->name('reports.index');
             Route::get('/reports/create', [DailyReportController::class, 'create'])->name('reports.create');
             Route::post('/reports', [DailyReportController::class, 'store'])->name('reports.store');

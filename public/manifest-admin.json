@@ -1,0 +1,22 @@
+{
+  "name": "CIAL Admin",
+  "short_name": "CIAL Administration",
+  "description": "Espace d'administration CIAL",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F3F4F6",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}
