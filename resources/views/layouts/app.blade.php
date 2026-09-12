@@ -223,7 +223,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('{{ asset('sw-admin.js') }}').catch(function () {
+                navigator.serviceWorker.register('{{ asset('sw-admin.js') }}?v=2').catch(function () {
                     console.warn('Service worker non activé.');
                 });
             });

@@ -1,17 +1,6 @@
-const CACHE_NAME = 'cial-admin-v1';
-const APP_SHELL = [
-  '/',
-  '/dashboard',
-  '/login',
-  '/manifest-admin.json',
-  '/logo/Logo_icone.png',
-  '/logo/Logo_cial.png'
-];
+const CACHE_NAME = 'cial-admin-v2';
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).catch(() => undefined)
-  );
   self.skipWaiting();
 });
 
@@ -29,15 +18,24 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  const requestUrl = new URL(event.request.url);
+  const isStaticAsset = requestUrl.origin === self.location.origin
+    && /\.(?:css|js|png|jpg|jpeg|gif|svg|ico|webp|woff2?)$/i.test(requestUrl.pathname);
+
+  // HTML must always come from Laravel so forms receive a current CSRF token.
+  if (! isStaticAsset) return;
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
 
       return fetch(event.request).then((response) => {
+        if (! response.ok) return response;
+
         const cloned = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cloned));
         return response;
-      }).catch(() => cached || Response.error());
+      }).catch(() => Response.error());
     })
   );
 });
