@@ -34,6 +34,14 @@ class DailyReportController extends Controller
                 ->whereHas('author', fn ($authorQuery) => $authorQuery->where('role', 'secretary'));
 
             $showWorkspace = true;
+        } elseif ($user->isTeacher() && $user->hasPermission('manage_teacher_all_reports')) {
+            $myReportsQuery = DailyReport::withoutGlobalScope('school')->with('author')->where('user_id', $user->id);
+
+            $workspaceQuery = DailyReport::withoutGlobalScope('school')->with('author')
+                ->where('user_id', '!=', $user->id)
+                ->whereHas('author', fn ($authorQuery) => $authorQuery->where('role', 'teacher'));
+
+            $showWorkspace = true;
         } else {
             $myReportsQuery = DailyReport::withoutGlobalScope('school')->with('author')
                 ->where('user_id', $user->id)
