@@ -77,6 +77,8 @@ Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name
 Route::middleware(['auth', 'school.context'])->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+    Route::post('/switch-school', [SchoolController::class, 'switch'])->name('schools.switch');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
    // pour la gestion du salon de discussion (chatRoom)

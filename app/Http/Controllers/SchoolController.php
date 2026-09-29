@@ -29,6 +29,27 @@ class SchoolController extends Controller
         return view('schools.create');
     }
 
+    public function switch(Request $request)
+    {
+        if (! $request->user()->isAdmin()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'school_id' => ['required', 'integer', 'exists:schools,id'],
+        ]);
+
+        $school = School::where('id', $validated['school_id'])->where('is_active', true)->first();
+
+        if (! $school) {
+            return back()->with('error', 'École invalide ou inactive.');
+        }
+
+        $request->session()->put('school_id', $school->id);
+
+        return back()->with('success', "École active : {$school->name}.");
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

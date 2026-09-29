@@ -157,7 +157,20 @@
                                 $currentSchool = \App\Models\School::find(session('school_id'));
                             @endphp
 
-                            @if($currentSchool)
+                            @if(auth()->user()->isAdmin())
+                                <form action="{{ route('schools.switch') }}" method="POST" class="flex max-w-full items-center gap-2">
+                                    @csrf
+                                    <label for="school-switcher" class="sr-only">Changer d'école</label>
+                                    <div class="flex items-center gap-2 rounded-full bg-indigo-50 px-2 py-1.5 text-xs font-medium text-indigo-700 sm:px-3">
+                                        <i class="ri-building-line shrink-0"></i>
+                                        <select id="school-switcher" name="school_id" onchange="this.form.submit()" class="max-w-[160px] truncate border-none bg-transparent p-0 text-xs font-medium text-indigo-700 focus:ring-0 sm:max-w-[220px]">
+                                            @foreach(\App\Models\School::where('is_active', true)->orderBy('name')->get() as $school)
+                                                <option value="{{ $school->id }}" @selected($currentSchool && $currentSchool->id === $school->id)>{{ $school->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </form>
+                            @elseif($currentSchool)
                                 <div class="flex max-w-full items-center gap-2 rounded-full bg-indigo-50 px-2 py-1.5 text-xs font-medium text-indigo-700 sm:px-3">
                                     <i class="ri-building-line shrink-0"></i>
                                     <span class="max-w-[160px] truncate sm:max-w-[220px]">École : {{ $currentSchool->name }}</span>
