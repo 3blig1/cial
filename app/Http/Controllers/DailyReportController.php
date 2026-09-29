@@ -13,36 +13,70 @@ class DailyReportController extends Controller
     {
         $user = Auth::user();
 
-        $reports = DailyReport::with('author')
-            ->when(! $user->isAdmin(), function ($query) use ($user) {
-                $query->where(function ($subQuery) use ($user) {
-                    $subQuery->where('user_id', $user->id);
+        $applyFilters = function ($query) use ($request) {
+            return $query
+                ->when($request->filled('report_date'), fn ($q) => $q->whereDate('report_date', $request->input('report_date')))
+                ->when($request->filled('author_id'), fn ($q) => $q->where('user_id', $request->input('author_id')));
+        };
 
-                    if ($user->isSecretary() && $user->hasPermission('manage_secretary_reports')) {
-                        $subQuery->orWhereHas('author', fn ($authorQuery) => $authorQuery->where('role', 'secretary'));
-                    }
+        // Bypass the school global scope so cross-school delegated permissions can work without switching the active school.
+        $showWorkspace = false;
+        $workspaceQuery = null;
 
-                    if ($user->isTeacher() && $user->hasPermission('manage_teacher_reports')) {
-                        $subQuery->orWhereHas('author', fn ($authorQuery) => $authorQuery->where('role', 'teacher'));
-                    }
-                });
-            })
-            ->when($request->filled('report_date'), function ($query) use ($request) {
-                $query->whereDate('report_date', $request->input('report_date'));
-            })
-            ->when($request->filled('author_id'), function ($query) use ($request) {
-                $query->where('user_id', $request->input('author_id'));
-            })
+        if ($user->isAdmin()) {
+            $myReportsQuery = DailyReport::withoutGlobalScope('school')->with('author')
+                ->where('school_id', session('school_id'));
+        } elseif ($user->isSecretary() && $user->hasPermission('manage_secretary_all_reports')) {
+            $myReportsQuery = DailyReport::withoutGlobalScope('school')->with('author')->where('user_id', $user->id);
+
+            $workspaceQuery = DailyReport::withoutGlobalScope('school')->with('author')
+                ->where('user_id', '!=', $user->id)
+                ->whereHas('author', fn ($authorQuery) => $authorQuery->where('role', 'secretary'));
+
+            $showWorkspace = true;
+        } elseif ($user->isSecretary() && $user->hasPermission('manage_secretary_reports')) {
+            $accessibleSchoolIds = $user->schools()->pluck('schools.id');
+
+            $myReportsQuery = DailyReport::withoutGlobalScope('school')->with('author')->where('user_id', $user->id);
+
+            $workspaceQuery = DailyReport::withoutGlobalScope('school')->with('author')
+                ->where('user_id', '!=', $user->id)
+                ->whereHas('author', fn ($authorQuery) => $authorQuery->where('role', 'secretary'))
+                ->whereIn('school_id', $accessibleSchoolIds);
+
+            $showWorkspace = true;
+        } elseif ($user->isTeacher() && $user->hasPermission('manage_teacher_reports')) {
+            $accessibleSchoolIds = $user->schools()->pluck('schools.id');
+
+            $myReportsQuery = DailyReport::withoutGlobalScope('school')->with('author')->where('user_id', $user->id);
+
+            $workspaceQuery = DailyReport::withoutGlobalScope('school')->with('author')
+                ->where('user_id', '!=', $user->id)
+                ->whereHas('author', fn ($authorQuery) => $authorQuery->where('role', 'teacher'))
+                ->whereIn('school_id', $accessibleSchoolIds);
+
+            $showWorkspace = true;
+        } else {
+            $myReportsQuery = DailyReport::withoutGlobalScope('school')->with('author')
+                ->where('user_id', $user->id)
+                ->where('school_id', session('school_id'));
+        }
+
+        $reports = $applyFilters($myReportsQuery)
             ->latest()
-            ->paginate(10)
+            ->paginate(10, ['*'], 'reports_page')
             ->withQueryString();
+
+        $workspaceReports = $showWorkspace
+            ? $applyFilters($workspaceQuery)->latest()->paginate(10, ['*'], 'workspace_page')->withQueryString()
+            : null;
 
         $authors = User::query()
             ->whereHas('reports')
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        return view('reports.index', compact('reports', 'authors'));
+        return view('reports.index', compact('reports', 'workspaceReports', 'showWorkspace', 'authors'));
     }
 
     public function create()
@@ -63,19 +97,21 @@ class DailyReportController extends Controller
         return redirect()->route('reports.index')->with('success', 'Rapport créé avec succès.');
     }
 
-    public function show(DailyReport $report)
+    public function show($report)
     {
+        $report = DailyReport::withoutGlobalScope('school')->with('author')->findOrFail($report);
+
         if (! Auth::user()->canManageReport($report)) {
             abort(403, "Vous n'avez pas la permission de consulter ce rapport.");
         }
 
-        $report->load('author');
         return view('reports.show', compact('report'));
     }
 
-    public function edit(DailyReport $report)
+    public function edit($report)
     {
         $user = Auth::user();
+        $report = DailyReport::withoutGlobalScope('school')->findOrFail($report);
 
         if (! $user->canManageReport($report)) {
             abort(403, "Vous n'avez pas la permission de modifier ce rapport.");
@@ -89,9 +125,10 @@ class DailyReportController extends Controller
         return view('reports.edit', compact('report'));
     }
 
-    public function update(Request $request, DailyReport $report)
+    public function update(Request $request, $report)
     {
         $user = Auth::user();
+        $report = DailyReport::withoutGlobalScope('school')->findOrFail($report);
 
         if (! $user->canManageReport($report)) {
             abort(403, "Vous n'avez pas la permission de modifier ce rapport.");
@@ -112,9 +149,10 @@ class DailyReportController extends Controller
         return redirect()->route('reports.index')->with('success', 'Rapport mis à jour avec succès.');
     }
 
-    public function destroy(DailyReport $report)
+    public function destroy($report)
     {
         $user = Auth::user();
+        $report = DailyReport::withoutGlobalScope('school')->findOrFail($report);
 
         if (! $user->isAdmin() && ! $user->hasPermission('delete_reports')) {
             abort(403);

@@ -38,53 +38,128 @@
     </div>
 @endif
 
-<div class="bg-white rounded-lg shadow-sm overflow-hidden">
-    <div class="overflow-x-auto">
-    <table class="w-full min-w-[760px]">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-            @forelse ($reports as $report)
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $report->title }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report->author->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div>Rapport du: {{ $report->report_date->format('d/m/Y') }}</div>
-                        <div class="text-xs text-gray-400">Créé le: {{ $report->created_at->format('d/m/Y') }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="{{ route('reports.show', $report) }}" class="text-primary hover:text-primary/80">Voir</a>
-                        @if(auth()->user()->isAdmin() || (auth()->user()->isSecretary() && auth()->id() === $report->user_id && now()->isSameDay($report->created_at)))
-                            <a href="{{ route('reports.edit', $report) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Éditer</a>
-                        @endif
-                        @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('delete_reports'))
-                        <form action="{{ route('reports.destroy', $report) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
-                        </form>
-                        @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                        Aucun rapport trouvé.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-    </div>
-</div>
+<div x-data="{ tab: 'mine' }">
+    @if($showWorkspace)
+        <div class="mb-4 border-b border-gray-200">
+            <nav class="-mb-px flex gap-6" aria-label="Tabs">
+                <button type="button" @click="tab = 'mine'"
+                    :class="tab === 'mine' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm">
+                    Mes Rapports
+                </button>
+                <button type="button" @click="tab = 'workspace'"
+                    :class="tab === 'workspace' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm">
+                    Workspace
+                </button>
+            </nav>
+        </div>
+    @endif
 
-<div class="mt-6">
-    {{ $reports->links() }}
+    <div x-show="tab === 'mine'">
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+            <table class="w-full min-w-[760px]">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse ($reports as $report)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $report->title }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report->author->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <div>Rapport du: {{ $report->report_date->format('d/m/Y') }}</div>
+                                <div class="text-xs text-gray-400">Créé le: {{ $report->created_at->format('d/m/Y') }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{{ route('reports.show', $report) }}" class="text-primary hover:text-primary/80">Voir</a>
+                                @if(auth()->user()->isAdmin() || (auth()->user()->isSecretary() && auth()->id() === $report->user_id && now()->isSameDay($report->created_at)))
+                                    <a href="{{ route('reports.edit', $report) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Éditer</a>
+                                @endif
+                                @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('delete_reports'))
+                                <form action="{{ route('reports.destroy', $report) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                                </form>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                Aucun rapport trouvé.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            {{ $reports->links() }}
+        </div>
+    </div>
+
+    @if($showWorkspace)
+        <div x-show="tab === 'workspace'" x-cloak>
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                <table class="w-full min-w-[760px]">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @forelse ($workspaceReports as $report)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $report->title }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report->author->name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div>Rapport du: {{ $report->report_date->format('d/m/Y') }}</div>
+                                    <div class="text-xs text-gray-400">Créé le: {{ $report->created_at->format('d/m/Y') }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="{{ route('reports.show', $report) }}" class="text-primary hover:text-primary/80">Voir</a>
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('reports.edit', $report) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Éditer</a>
+                                    @endif
+                                    @if(auth()->user()->isAdmin() || auth()->user()->hasPermission('delete_reports'))
+                                    <form action="{{ route('reports.destroy', $report) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                                    </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                    Aucun rapport trouvé.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                {{ $workspaceReports->links() }}
+            </div>
+        </div>
+    @endif
 </div>
 @endsection
