@@ -190,7 +190,7 @@
                             </a>
                             <div class="relative max-w-full">
                                 <button type="button" id="user-menu-button" class="flex max-w-full items-center gap-2 rounded-full px-1 py-1 hover:bg-gray-50 sm:px-2">
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=7F9CF5&background=EBF4FF" class="h-10 w-10 rounded-full object-cover" alt="Avatar de {{ auth()->user()->name }}">
+                                    <img src="{{ auth()->user()->profile_photo_path ? asset('storage/' . auth()->user()->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&color=7F9CF5&background=EBF4FF' }}" class="h-10 w-10 rounded-full object-cover" alt="Avatar de {{ auth()->user()->name }}">
                                     <span class="hidden max-w-[120px] truncate text-sm font-medium sm:inline">{{ auth()->user()->name }}</span>
                                     @if(auth()->user()->isAdmin())
                                         <span class="hidden rounded-full bg-indigo-100 px-2 py-0.5 text-xs text-indigo-700 md:inline">Admin global</span>

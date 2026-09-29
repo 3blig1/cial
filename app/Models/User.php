@@ -43,6 +43,7 @@ class User extends Authenticatable
         'password',
         'role',
         'permissions',
+        'profile_photo_path',
     ];
 
     /**

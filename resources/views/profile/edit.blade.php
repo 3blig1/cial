@@ -21,9 +21,20 @@
                         </p>
                     </header>
 
-                    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+                    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
                         @csrf
                         @method('patch')
+
+                        <div class="flex items-center gap-4">
+                            <img src="{{ $user->profile_photo_path ? asset('storage/' . $user->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&color=7F9CF5&background=EBF4FF' }}" class="h-16 w-16 rounded-full object-cover" alt="Photo de profil">
+                            <div>
+                                <label for="profile_photo" class="block text-sm font-medium text-gray-700 mb-1">Photo de profil</label>
+                                <input id="profile_photo" name="profile_photo" type="file" accept="image/*" class="text-sm">
+                                @error('profile_photo')
+                                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
 
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
@@ -55,6 +66,19 @@
                             @endif
                         </div>
                     </form>
+
+                    @if($user->profile_photo_path)
+                        <form method="post" action="{{ route('profile.update') }}" class="mt-4">
+                            @csrf
+                            @method('patch')
+                            <input type="hidden" name="remove_photo" value="true">
+                            <button type="submit" class="text-sm text-red-600 hover:text-red-900" onclick="return confirm('Supprimer votre photo de profil ?');">Supprimer la photo de profil</button>
+                        </form>
+
+                        @if (session('status') === 'photo-removed')
+                            <p class="mt-2 text-sm text-gray-600">Photo supprimée.</p>
+                        @endif
+                    @endif
                 </section>
             </div>
         </div>
