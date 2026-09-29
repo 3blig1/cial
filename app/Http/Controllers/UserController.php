@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\School;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -53,6 +54,19 @@ class UserController extends Controller
             $user->schools()->detach();
         } elseif (! empty($validated['school_ids'])) {
             $user->schools()->sync($validated['school_ids']);
+        }
+
+        // La liste "Enseignants" se base sur le modèle Teacher, pas User : on crée la fiche correspondante.
+        if ($validated['role'] === 'teacher') {
+            $nameParts = preg_split('/\s+/', trim($validated['name']), 2);
+
+            Teacher::create([
+                'first_name' => $nameParts[0] ?? $validated['name'],
+                'last_name' => $nameParts[1] ?? '-',
+                'email' => $validated['email'],
+                'specialty' => 'Non renseigné',
+                'school_id' => $validated['school_ids'][0] ?? null,
+            ]);
         }
 
         return redirect()->route('users.index')->with('success', 'L\'utilisateur a été créé avec succès.');

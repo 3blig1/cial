@@ -13,6 +13,11 @@ class TeacherObserver
      */
     public function created(Teacher $teacher): void
     {
+        // Evite un doublon si le User a déjà été créé (ex: via la page Utilisateurs).
+        if (User::where('email', $teacher->email)->exists()) {
+            return;
+        }
+
         User::create([
             'name' => $teacher->first_name . ' ' . $teacher->last_name,
             'email' => $teacher->email,
