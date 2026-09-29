@@ -62,11 +62,19 @@ class TeacherController extends Controller
 
     public function edit(Teacher $teacher)
     {
+        if (! auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         return view('teachers.edit', compact('teacher'));
     }
 
     public function update(Request $request, Teacher $teacher)
     {
+        if (! auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -92,6 +100,10 @@ class TeacherController extends Controller
 
     public function destroy(Teacher $teacher)
     {
+        if (! auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
         // Rechercher l'utilisateur correspondant par e-mail
         $user = User::where('email', $teacher->email)->first();
 

@@ -9,10 +9,12 @@
             <span>Retour à la liste</span>
         </a>
         <div class="flex items-center gap-4">
+            @if(auth()->user()->isAdmin())
             <a href="{{ route('teachers.edit', $teacher) }}" class="px-4 py-2 bg-primary text-white font-medium rounded-button hover:bg-primary/90 flex items-center gap-2">
                 <i class="ri-pencil-line"></i>
                 <span>Modifier</span>
             </a>
+            @endif
         </div>
    
 @endsection

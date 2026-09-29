@@ -60,12 +60,14 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $teacher->specialty }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a href="{{ route('teachers.show', $teacher) }}" class="text-primary hover:text-primary/80">Voir</a>
+                        @if(auth()->user()->isAdmin())
                         <a href="{{ route('teachers.edit', $teacher) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Éditer</a>
                         <form action="{{ route('teachers.destroy', $teacher) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet enseignant ?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
                         </form>
+                        @endif
                     </td>
                 </tr>
             @empty
