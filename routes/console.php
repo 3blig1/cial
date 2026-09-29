@@ -182,3 +182,47 @@ Artisan::command('school:backfill-student-school {--apply : Persist changes in d
 
     return self::SUCCESS;
 })->purpose('Backfill missing school_id for students and pending students.');
+
+Artisan::command('teachers:backfill-from-users {--apply : Persist changes in database}', function () {
+    $apply = (bool) $this->option('apply');
+
+    $users = DB::table('users')
+        ->where('role', 'teacher')
+        ->get(['id', 'name', 'email']);
+
+    $created = 0;
+    $skipped = 0;
+
+    foreach ($users as $user) {
+        $existingTeacher = DB::table('teachers')->where('email', $user->email)->exists();
+
+        if ($existingTeacher) {
+            $skipped++;
+            continue;
+        }
+
+        $nameParts = preg_split('/\s+/', trim($user->name), 2);
+        $schoolId = DB::table('school_user')->where('user_id', $user->id)->value('school_id');
+
+        if ($apply) {
+            DB::table('teachers')->insert([
+                'first_name' => $nameParts[0] ?? $user->name,
+                'last_name' => $nameParts[1] ?? '-',
+                'email' => $user->email,
+                'specialty' => 'Non renseigné',
+                'school_id' => $schoolId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        $created++;
+    }
+
+    $this->info($apply ? 'Mode APPLY: fiches Teacher creees.' : 'Mode DRY-RUN: aucune ecriture en base.');
+    $this->line("- Users role=teacher: {$users->count()}");
+    $this->line("- Fiches Teacher a creer: {$created}");
+    $this->line("- Deja existantes (ignorees): {$skipped}");
+
+    return self::SUCCESS;
+})->purpose('Backfill missing Teacher records for users with role=teacher created before the auto-sync fix.');
