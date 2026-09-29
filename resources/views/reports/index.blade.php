@@ -38,25 +38,23 @@
     </div>
 @endif
 
-<div x-data="{ tab: 'mine' }">
+<div>
     @if($showWorkspace)
         <div class="mb-4 border-b border-gray-200">
             <nav class="-mb-px flex gap-6" aria-label="Tabs">
-                <button type="button" @click="tab = 'mine'"
-                    :class="tab === 'mine' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm">
+                <button type="button" id="tab-btn-mine" onclick="reportsShowTab('mine')"
+                    class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-primary text-primary">
                     Mes Rapports
                 </button>
-                <button type="button" @click="tab = 'workspace'"
-                    :class="tab === 'workspace' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm">
+                <button type="button" id="tab-btn-workspace" onclick="reportsShowTab('workspace')"
+                    class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     Workspace
                 </button>
             </nav>
         </div>
     @endif
 
-    <div x-show="tab === 'mine'">
+    <div id="tab-panel-mine">
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full min-w-[760px]">
@@ -109,7 +107,7 @@
     </div>
 
     @if($showWorkspace)
-        <div x-show="tab === 'workspace'" x-cloak>
+        <div id="tab-panel-workspace" class="hidden">
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                 <table class="w-full min-w-[760px]">
@@ -162,4 +160,24 @@
         </div>
     @endif
 </div>
+
+@if($showWorkspace)
+<script>
+    function reportsShowTab(tab) {
+        const activeClasses = ['border-primary', 'text-primary'];
+        const inactiveClasses = ['border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'];
+
+        document.getElementById('tab-panel-mine').classList.toggle('hidden', tab !== 'mine');
+        document.getElementById('tab-panel-workspace').classList.toggle('hidden', tab !== 'workspace');
+
+        document.getElementById('tab-btn-mine').classList.toggle('border-primary', tab === 'mine');
+        document.getElementById('tab-btn-mine').classList.toggle('text-primary', tab === 'mine');
+        inactiveClasses.forEach(c => document.getElementById('tab-btn-mine').classList.toggle(c, tab !== 'mine'));
+
+        document.getElementById('tab-btn-workspace').classList.toggle('border-primary', tab === 'workspace');
+        document.getElementById('tab-btn-workspace').classList.toggle('text-primary', tab === 'workspace');
+        inactiveClasses.forEach(c => document.getElementById('tab-btn-workspace').classList.toggle(c, tab !== 'workspace'));
+    }
+</script>
+@endif
 @endsection
